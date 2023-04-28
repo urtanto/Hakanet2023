@@ -8,9 +8,6 @@
     <main class="max-w-5xl mx-auto my-1">
       <slot />
     </main>
-    <footer class="flex justify-between mt-auto px-4 bg-gray-400">
-      <p>Nuxt site &copy;</p>
-      <p>All rigths reserved.</p>
-    </footer>
+    <Footer class="mt-auto" />
   </div>
 </template>

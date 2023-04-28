@@ -33,7 +33,7 @@
     "bracketSpacing": true,
     "bracketSameLine": false,
     "arrowParens": "always",
-    "singleAttributePerLine": false,
+    "singleAttributePerLine": true,
     "endOfLine": "lf"
   },
   "description": "WynWebKit - Wyndace's Web Development Kit | Starter Template from Web Devs for Web Devs.",

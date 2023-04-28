@@ -3,17 +3,7 @@
     <SeoKit />
     <OgImageScreenshot />
     <header class="h-20 bg-blue-400 text-white flex items-center justify-center px-4">
-      <nav class="flex items-center justify-between container">
-        <NuxtLink to="/">Nuxt Site</NuxtLink>
-        <ul class="flex items-center justify-between gap-11">
-          <li>
-            <WWKLink class="" to="/">Home</WWKLink>
-          </li>
-          <li>
-            <WWKLink to="/about/">About</WWKLink>
-          </li>
-        </ul>
-      </nav>
+      <Navbar />
     </header>
     <main class="max-w-5xl mx-auto my-1">
       <slot />

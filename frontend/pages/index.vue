@@ -13,8 +13,6 @@
 </template>
 
 <script lang="ts" setup>
-import { definePageMeta } from "~~/.nuxt/imports"
-
 definePageMeta({
   title: "Home",
   description: "Home page of Nuxt Site",

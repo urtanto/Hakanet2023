@@ -4,7 +4,7 @@
 
 1. Download needed image
    ```bash
-   docker pull ubuntu:22.04
+   docker pull python:3.10
    ```
 2. Build your image
    ```bash

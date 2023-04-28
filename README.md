@@ -20,7 +20,7 @@
    ```
 5. Start you container
    ```bash
-   docker stop CONTAINER_ID
+   docker start CONTAINER_ID
    ```
 6. Logs of container
    ```bash

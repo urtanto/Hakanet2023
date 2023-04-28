@@ -93,8 +93,8 @@ import { Collapse } from "flowbite"
 export default defineComponent({
   setup() {
     onMounted(() => {
-      const $triggerEl: HTMLElement = document.querySelector("[data-collapse-toggle]")
-      const $targetEl: HTMLElement = document.querySelector("#navbar-sticky")
+      const $triggerEl: HTMLElement | null = document.querySelector("[data-collapse-toggle]")
+      const $targetEl: HTMLElement | null = document.querySelector("#navbar-sticky")
       new Collapse($targetEl, $triggerEl)
     })
     return {}

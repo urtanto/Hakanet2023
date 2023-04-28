@@ -7,9 +7,9 @@ export default defineNuxtConfig({
     indexable: false,
     public: {
       siteUrl: "http:/localhost:3000",
-      siteName: "Nuxt Site",
+      siteName: "Hackaton Site",
       siteDescription: "Site base on Nuxt.",
-      language: "en-US",
+      language: "ru-RU",
       titleSeparator: "|",
       trailingSlash: false,
     },

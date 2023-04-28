@@ -3,9 +3,12 @@
 </template>
 
 <script lang="ts">
-export default {
-
-}
+import { definePageMeta } from "~~/.nuxt/imports"
+definePageMeta({
+  title: "Auth",
+  description: "Abot page of Nuxt Site",
+})
+export default {}
 </script>
 
 <style></style>

@@ -1,6 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: ["nuxt-seo-kit"],
+  vite: {
+    server: {
+      hmr: {
+        protocol: "ws",
+        host: "0.0.0.0",
+      },
+    },
+  },
   modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge"],
   runtimeConfig: {
     trailingSlash: true,

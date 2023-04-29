@@ -2,7 +2,7 @@
   <div class="flex flex-col min-h-screen">
     <SeoKit />
     <OgImageScreenshot />
-    <header class="h-20">
+    <header class="min-[460px]:h-20 h-32 p-1 box-content">
       <hack-navbar />
     </header>
     <main class="max-w-5xl mx-auto my-1">

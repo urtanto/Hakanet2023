@@ -13,8 +13,15 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from "vue"
+import { initModals, initCollapses } from "flowbite"
 definePageMeta({
   title: "Home",
   description: "Home page of Nuxt Site",
+})
+
+onMounted(() => {
+  initModals()
+  initCollapses()
 })
 </script>

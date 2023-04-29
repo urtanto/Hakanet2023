@@ -1,4 +1,4 @@
-FROM node:19.9
+FROM node:19.9-slim
 LABEL authors="vlada"
 
 RUN mkdir front

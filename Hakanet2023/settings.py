@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")
 # DEBUG = True
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["*.stylelifeweb.su"]
+ALLOWED_HOSTS = ["stylelifeweb.su"]
 
 # Application definition
 

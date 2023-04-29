@@ -6,9 +6,10 @@ WORKDIR proj
 
 ENV PYTHONUNBUFFERED 1
 
+ADD requipments.txt /proj/
+RUN pip install -r requipments.txt
+
 ADD . /proj/
 ADD .env.docker /proj/.env
 
-RUN pip install -r requipments.txt
-
-CMD gunicorn Hakanet2023.wsgi:application -b 0.0.0.0:8000
+ENTRYPOINT gunicorn Hakanet2023.wsgi:application -b 0.0.0.0:8000

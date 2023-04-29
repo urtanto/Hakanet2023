@@ -1,0 +1,6 @@
+Django==4.2
+pylint==2.17.2
+pylint-django==2.5.3
+django-environ==0.10.0
+gunicorn==20.1.0
+djoser==2.2.0

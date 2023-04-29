@@ -8,4 +8,4 @@ class User(AbstractUser):
 
     :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
     """
-    status = models.CharField(max_length=255)
+    # status = models.CharField(max_length=255)

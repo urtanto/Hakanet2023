@@ -1,6 +1,50 @@
-# Docker guid
+# Хаканет
 
-### Start guid
+### Инструкция по настройке проекта:
+
+1. Склонировать проект
+2. Открыть проект в PyCharm с наcтройками по умолчанию
+3. Создать виртуальное окружение (через settings -> project "Hakanet2023" -> project interpreter)
+4. Открыть терминал в PyCharm, проверить, что виртуальное окружение активировано.
+5. Обновить pip:
+   ```bash
+   pip install --upgrade pip
+   ```
+6. Установить в виртуальное окружение необходимые пакеты:
+   ```bash
+   pip install -r requirements.txt
+   ```
+7. Установить в виртуальное окружение переменную для запуска:
+   * Windows:
+      ```bash
+      $env:Server_starts="false"
+      ```
+   * Linux:
+      ```bash
+      export Server_starts="false"
+      ```
+8. Синхронизировать структуру базы данных с моделями:
+   ```bash
+   python manage.py migrate
+   ```
+9. Создать конфигурацию запуска в PyCharm (файл `manage.py`, опция `runserver`)
+
+### Django Tips and Tricks
+
+* Создать миграцию базы данных:
+   ```bash
+   python manage.py makemigrations
+   ```
+* Накатить миграции базы данных:
+   ```bash
+   python manage.py migrate
+   ```
+* Создать суперпользователя:
+   ```bash
+   python manage.py shell -c "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('vasya', '1@abc.net', 'promprog')"
+   ```
+
+### Docker start guid
 
 1. Download needed image
    ```bash

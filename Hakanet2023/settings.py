@@ -81,12 +81,22 @@ WSGI_APPLICATION = 'Hakanet2023.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+# sudo -i -u postgres
+# psql
+DATABASES = dict()
+if os.environ["Server_starts"] == "false":
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'mydb.sqlite3',
     }
-}
+else:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydb',
+        'USER': 'admindb',
+        'PASSWORD': 'admindbpass',
+        'HOST': 'localhost',
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

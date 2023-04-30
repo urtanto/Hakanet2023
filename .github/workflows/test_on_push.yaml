@@ -34,4 +34,4 @@ jobs:
       - name: Build image
         run: docker build . -t $LOGIN/$NAME_BACK:${GITHUB_REF:11}
       - name: Push image to docker
-        run: docker push $LOGIN/$NAME_BACK:${GITHUB:11}
+        run: docker push $LOGIN/$NAME_BACK:${GITHUB_REF:11}

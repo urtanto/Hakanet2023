@@ -52,7 +52,7 @@ ignore=venv,
        manage.py,
        docs
 
-django-settings-module=djangoProject.settings
+django-settings-module=Hakanet2023.settings
 
 # Add files or directories matching the regular expressions patterns to the
 # ignore-list. The regex matches against paths and can be in Posix or Windows

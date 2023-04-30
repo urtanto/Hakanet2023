@@ -14,9 +14,9 @@ def get_name(x: User) -> str:
 
 def start_page(request: WSGIRequest) -> JsonResponse:
     """function of starting page"""
-    users = list(map(get_name, User.objects.all()))
+    # users = list(map(get_name, User.objects.all()))
     context = {
         "text": "starting page",
-        "users": users
+        # "users": users,
     }
     return JsonResponse(context)

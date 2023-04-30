@@ -43,6 +43,10 @@
    ```bash
    python manage.py shell -c "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('vasya', '1@abc.net', 'promprog')"
    ```
+* Запустить тесты джанги:
+   ```bash
+   python manage.py test
+   ```
 
 ### Docker start guid
 

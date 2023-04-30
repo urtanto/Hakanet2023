@@ -22,7 +22,7 @@ jobs:
         run: python manage.py test
   build_and_pub:
     needs: [ run_tests ]
-    uns-on: [ ubuntu-latest ]
+    runs-on: [ ubuntu-latest ]
     env:
       LOGIN: ${{ secrets.DOCKER_LOGIN }}
       NAME_BACK: ${{ secrets.DOCKER_BACK_NAME }}

@@ -15,6 +15,8 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: 3.10.11
+      - name: Get params
+        run: echo % {{ github.head_ref }}
       - name: Cache pythons dependencies
         uses: actions/cache@v3
         with:

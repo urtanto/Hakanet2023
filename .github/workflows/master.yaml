@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: 3.10.11
       - name: Get params
-        run: echo ${{ toJson(github) }}
+        run: echo "${{ toJson(github) }}"
       - name: Cache pythons dependencies
         uses: actions/cache@v3
         with:

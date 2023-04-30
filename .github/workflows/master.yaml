@@ -41,6 +41,7 @@ jobs:
       - name: Tests
         run: python manage.py test
   build_and_pub:
+    if: github.github.repository != "master"
     needs: [ tests, code_style ]
     runs-on: [ ubuntu-latest ]
     env:

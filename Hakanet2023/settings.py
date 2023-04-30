@@ -83,20 +83,23 @@ WSGI_APPLICATION = 'Hakanet2023.wsgi.application'
 
 # sudo -i -u postgres
 # psql
-DATABASES = dict()
-if os.environ["Server_starts"] == "false":
-    DATABASES['default'] = {
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'mydb.sqlite3',
     }
-else:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydb',
-        'USER': 'admindb',
-        'PASSWORD': 'admindbpass',
-        'HOST': 'localhost',
-    }
+}
+try:
+    if os.environ["Server_starts"] == "true":
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'mydb',
+            'USER': 'admindb',
+            'PASSWORD': 'admindbpass',
+            'HOST': 'localhost',
+        }
+except KeyError:
+    pass
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

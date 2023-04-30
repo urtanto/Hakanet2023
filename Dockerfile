@@ -1,10 +1,12 @@
-FROM python:3.10-slim-buster
+FROM python:3.10-alpine
 LABEL authors="vlada"
 
 RUN mkdir proj
 WORKDIR proj
 
 ENV PYTHONUNBUFFERED 1
+
+RUN apk update
 
 ADD requirements.txt /proj/
 RUN pip install -r requirements.txt

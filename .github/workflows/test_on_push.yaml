@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_tests:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v1
@@ -20,3 +20,18 @@ jobs:
         run: pylint .
       - name: Tests
         run: python manage.py test
+  build_and_pub:
+    needs: [ run_tests ]
+    uns-on: [ ubuntu-latest ]
+    env:
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      NAME_BACK: ${{ secrets.DOCKER_BACK_NAME }}
+      NAME_FRONT: ${{ secrets.DOCKER_FRONT_NAME }}
+    steps:
+      - name: Login to docker
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      - uses: actions/checkout@master
+      - name: Build image
+        run: dicker build --tag $LOGIN/$NAME_BACK:${GITHUB:11} -f DockerFile
+      - name: Push image to docker
+        run: docker push $LOGIN/$NAME_BACK:${GITHUB:11}

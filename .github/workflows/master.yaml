@@ -57,6 +57,6 @@ jobs:
       - name: Push backend image to docker
         run: docker push $LOGIN/$NAME_BACK:${GITHUB_REF:11}
       - name: Build frontend image
-        run: docker build ./frontend -t $LOGIN/$NAME_BACK:${GITHUB_REF:11}
+        run: docker build ./frontend -t $LOGIN/NAME_FRONT:${GITHUB_REF:11}
       - name: Push frontend image to docker
         run: docker push $LOGIN/NAME_FRONT:${GITHUB_REF:11}

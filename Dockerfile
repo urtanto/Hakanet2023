@@ -6,8 +6,8 @@ WORKDIR proj
 
 ENV PYTHONUNBUFFERED 1
 
-ADD requipments.txt /proj/
-RUN pip install -r requipments.txt
+ADD requirements.txt /proj/
+RUN pip install -r requirements.txt
 
 ADD . /proj/
 ADD .env.docker /proj/.env

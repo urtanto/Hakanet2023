@@ -1,7 +1,7 @@
 name: CI
 
-on: path
-#  path:
+on: push
+#  push:
 #    path-ignore:
 #      - '.github/workflows/*'
 

@@ -1,10 +1,11 @@
 FROM python:3.10-alpine
-LABEL authors="vlada"
+LABEL authors="urtanto"
 
 RUN mkdir proj
 WORKDIR proj
 
 ENV PYTHONUNBUFFERED 1
+ENV Server_starts "true"
 
 RUN apk update
 

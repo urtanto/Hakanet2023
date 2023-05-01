@@ -1,5 +1,5 @@
 FROM node:19.9-slim
-LABEL authors="vlada"
+LABEL authors="urtanto"
 
 RUN mkdir front
 WORKDIR front

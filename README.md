@@ -48,6 +48,75 @@
    python manage.py test
    ```
 
+### PostgreSql moment(Ubuntu)
+
+* Install postgresql-client:
+   ```bash
+   sudo apt install postgresql-client-14
+   ```
+* Install postgresql-client:
+   ```bash
+   sudo apt install postgresql
+   ```
+* Get postgresql version:
+   ```bash
+   sudo -u postgres psql -c "SELECT version();"
+   ```
+* Check postgres status
+   ```bash
+   pg_lsclusters
+   ```
+* Restart the pg_ctlcluster:
+    > `pg_ctlcluster <version> <cluster> <action>`
+   ```bash
+   pg_ctlcluster 14 main start
+   ```
+* Restart the postgres server:
+   ```bash
+   sudo service postgresql restart
+   ```
+* Login in postgres:
+   ```bash
+   sudo -i -u postgres
+   ```
+   or
+   ```bash
+   su postgres
+   ```
+   ```bash
+   psql
+   ```
+* Create db:
+   ```bash
+   createdb mydb
+   ```
+* Delete db:
+   ```bash
+   dropdb mydb
+   ```
+* Create user to django:
+   ```bash
+   createuser admindb -P
+   ```
+    enter a password
+* Docker pull postgres image:
+   ```bash
+   docker pull postgres:alpine
+   ```
+* Docker run command:
+   ```bash
+   docker run --name postgres-0 -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres:alpine
+   ```
+* Open docker container:
+   ```bash
+   docker exec -it postgres-0 bash
+   ```
+* Login in psql:
+   ```bash
+   psql -U postgres
+   ```
+
+
 ### Docker start guid
 
 1. Download needed image

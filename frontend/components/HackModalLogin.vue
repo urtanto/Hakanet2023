@@ -11,7 +11,7 @@
         idInput="loginLog"
         typeInput="login"
         nameInput="loginLog"
-        v-model.trim.lazy="login"
+        v-model.trim.lazy="formData.login"
       >
         <div class="flex items-center">
           <svg
@@ -36,7 +36,7 @@
         nameInput="passwordLog"
         :visible="visible"
         @changeMode="changeMode"
-        v-model.trim.lazy="password"
+        v-model.trim.lazy="formData.password"
       >
         <div class="flex items-center">
           <svg
@@ -91,8 +91,10 @@ export default defineComponent({
   data() {
     return {
       visible: false,
-      login: "",
-      password: "",
+      formData: {
+        login: "",
+        password: "",
+      },
     }
   },
   methods: {

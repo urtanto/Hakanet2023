@@ -81,7 +81,7 @@ jobs:
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
     steps:
       - name: Install sshpass
-        run: apt install sshpass
+        run: sudo apt install sshpass
       - name: SSH connect
         run: sshpass -p $SSH_PASSWORD ssh www@stylelifeweb.su
       - name: Create smt

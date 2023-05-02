@@ -78,4 +78,4 @@ jobs:
           username: www
           password: ${{ secrets.PASSWORD }}
           port: 22
-          script: update_proj
+          script: cd ~/Hakanet2023/ && update_proj

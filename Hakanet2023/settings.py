@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")
 # DEBUG = True
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su", "api.stylelifeweb.su", "127.0.0.1"]
 
 # Application definition
 
@@ -81,12 +81,25 @@ WSGI_APPLICATION = 'Hakanet2023.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# sudo -i -u postgres
+# psql
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'mydb.sqlite3',
     }
 }
+try:
+    if os.environ["Server_starts"] == "true":
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'mydb',
+            'USER': 'chudo',
+            'PASSWORD': 'password',
+            'HOST': 'db',
+        }
+except KeyError:
+    pass
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

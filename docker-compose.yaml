@@ -1,0 +1,40 @@
+version: '2'
+services:
+  db:
+    image: bitnami/postgresql:latest
+    hostname: db
+    volumes:
+      - 'postgresql_master_data:/bitnami/postgresql'
+    environment:
+      - POSTGRES_USER=chudo
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydb
+    ports:
+      - "5432:5432"
+
+  back:
+    image: urtanto/back_ci:prod
+    hostname: back
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    links:
+      - db
+    depends_on:
+      - db
+
+  front:
+    image: urtanto/front_ci:prod
+    hostname: front
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    links:
+      - back
+    depends_on:
+      - back
+
+volumes:
+  postgresql_master_data:

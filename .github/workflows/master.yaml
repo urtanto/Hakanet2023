@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    path-ignore:
+      - '.gitignore'
+      - 'README.md'
+
+jobs:
+
+  code_style:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.10.11
+      - name: Get params
+        run: echo "${{ toJson(github) }}"
+      - name: Cache pythons dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/lib/python3.10/site-packages
+          key: python-packages-${{ hashFiles('**requirements.txt') }}
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: CodeStyle
+        run: pylint .
+
+  tests:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.10.11
+      - name: Cache pythons dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/lib/python3.10/site-packages
+          key: python-packages-${{ hashFiles('**requirements.txt') }}
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Tests
+        run: python manage.py test
+
+  build_and_pub:
+    if: github.ref == 'refs/heads/prod'
+    needs: [ tests, code_style ]
+    runs-on: [ ubuntu-latest ]
+    env:
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      NAME_BACK: ${{ secrets.DOCKER_BACK_NAME }}
+      NAME_FRONT: ${{ secrets.DOCKER_FRONT_NAME }}
+    steps:
+      - name: Login to docker
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      - uses: actions/checkout@v3
+      - name: Build backend image
+        run: docker build . -t $LOGIN/$NAME_BACK:${GITHUB_REF:11}
+      - name: Push backend image to docker
+        run: docker push $LOGIN/$NAME_BACK:${GITHUB_REF:11}
+      - name: Build frontend image
+        run: docker build ./frontend -t $LOGIN/$NAME_FRONT:${GITHUB_REF:11}
+      - name: Push frontend image to docker
+        run: docker push $LOGIN/$NAME_FRONT:${GITHUB_REF:11}
+
+  deploy_to_server:
+    needs: [ build_and_pub ]
+    runs-on: [ ubuntu-latest ]
+    env:
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: stylelifeweb.su
+          username: www
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: cd ~/Hakanet2023/ && update_proj

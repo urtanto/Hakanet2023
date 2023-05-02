@@ -2,7 +2,7 @@ FROM node:19.9-slim
 LABEL authors="urtanto"
 
 RUN mkdir front
-WORKDIR front
+WORKDIR /front
 
 ADD package.json /front/
 

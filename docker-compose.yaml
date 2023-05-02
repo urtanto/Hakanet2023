@@ -13,7 +13,7 @@ services:
       - "5432:5432"
 
   back:
-    image: back
+    image: urtanto/back_ci:prod
     hostname: back
     volumes:
       - .:/app

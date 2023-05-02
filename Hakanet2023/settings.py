@@ -94,9 +94,9 @@ try:
         DATABASES['default'] = {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'mydb',
-            'USER': 'postgres',
+            'USER': 'chudo',
             'PASSWORD': 'password',
-            'HOST': 'localhost',
+            'HOST': 'db',
         }
 except KeyError:
     pass

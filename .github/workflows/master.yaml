@@ -7,6 +7,7 @@ on:
       - 'README.md'
 
 jobs:
+
   code_style:
     runs-on: [ ubuntu-latest ]
     steps:
@@ -25,6 +26,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: CodeStyle
         run: pylint .
+
   tests:
     runs-on: [ ubuntu-latest ]
     steps:
@@ -41,6 +43,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Tests
         run: python manage.py test
+
   build_and_pub:
     if: github.ref == 'refs/heads/prod'
     needs: [ tests, code_style ]
@@ -61,3 +64,28 @@ jobs:
         run: docker build ./frontend -t $LOGIN/$NAME_FRONT:${GITHUB_REF:11}
       - name: Push frontend image to docker
         run: docker push $LOGIN/$NAME_FRONT:${GITHUB_REF:11}
+
+  deploy_to_server:
+    needs: [ build_and_pub ]
+    runs-on: [ ubuntu-latest ]
+    env:
+      SSH_KEY: ${{ secrets.SSH_PASSWORD }}
+    steps:
+      - name: Create ssh-key
+        run: ssh-keygen -f "ssh_moment" -N "password"
+
+  roflo_deploy:
+    if: github.ref == 'refs/heads/test/deploy'
+    runs-on: [ ubuntu-latest ]
+    env:
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+    steps:
+      - name: Update
+        run: apt update
+      - name: Install sshpass
+        run: apt install sshpass
+      - name: SSH connect
+        run: sshpass -p $SSH_PASSWORD ssh www@stylelifeweb.su
+      - name: Create smt
+        run: touch penis
+

@@ -83,7 +83,7 @@ jobs:
       - name: Install sshpass
         run: sudo apt install sshpass
       - name: SSH connect
-        run: sshpass -p $SSH_PASSWORD ssh www@stylelifeweb.su
+        run: sshpass -p $SSH_PASSWORD ssh -tt www@stylelifeweb.su
       - name: Create smt
         run: touch penis
 

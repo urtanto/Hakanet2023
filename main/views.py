@@ -1,22 +1,31 @@
 """
 view functions
 """
+import json
+
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 # from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.handlers.wsgi import WSGIRequest
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.hashers import make_password
-from main.models import User
+from django.views.decorators.http import require_POST
 
 from main.models import User, Photo, Article
 
 
 def get_name(x: User) -> str:
+    """
+    function getting user's name
+    """
     return x.username
 
 
 def get_image_path(x: Photo) -> list:
+    """
+    function getting path of 2 images
+    """
     return [x.photo_before, x.photo_after]
 
 
@@ -24,23 +33,10 @@ def get_names_of_articles(x: Article) -> str:
     return x.name
 
 
-@ensure_csrf_cookie
-def auth_set_csrf_cookie(request):
-    return JsonResponse({"details": "CSRF cookie set"})
-
-
-def registration(request: WSGIRequest) -> JsonResponse:
-    if request.method == "POST":
-        user = User(username=request.POST['username'],
-                    password=make_password(request.POST['password']),
-                    email=request.POST['email'])
-        user.save()
-        return JsonResponse({"text": "ok"})
-    return JsonResponse({"error"})
-
-
 def start_page(request: WSGIRequest) -> JsonResponse:
-    """function of starting page"""
+    """
+    function of starting page
+    """
     users = list(map(get_name, User.objects.all()))
     context = {
         "text": "starting page",
@@ -76,6 +72,9 @@ def photo_sort(request: WSGIRequest) -> JsonResponse:
 
 @login_required
 def check(request: WSGIRequest) -> JsonResponse:
+    """
+    simple check
+    """
     return JsonResponse({"text": "okkkkk"})
 
 
@@ -128,3 +127,22 @@ def make_article(request: WSGIRequest):
     new_article.save()
 
     return
+
+
+@require_POST
+def auth_login(request):
+    data = json.loads(request.body)
+    username = data.get("username")
+    password = data.get("password")
+    # добавить необходимые проверки
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return JsonResponse({"detail": "Success"})
+    return JsonResponse({"detail": "Invalid credentials"}, status=400)
+
+
+@require_POST
+def auth_logout(request):
+    logout(request)
+    return JsonResponse({"detail": "Logout Successful"})

@@ -153,8 +153,20 @@ def logout(request):
     return Response({"h": request.headers})
 
 
-@api_view(["POST"])
+@api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_user(request):
-    return Response({"user": request.user})
+    print(request.user.__dict__)
+    user = {}
+    waste_keys = [
+        "id",
+        "_state",
+        "password",
+        "super_user",
+        "is_staff",
+    ]
+    for key in request.user.__dict__:
+        if key not in waste_keys:
+            user[key] = request.user.__dict__[key]
+    return Response({"user": user})

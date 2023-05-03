@@ -20,10 +20,9 @@ from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('auth/', include('djoser.urls')),
-    # re_path(r'^auth/', include('djoser.urls.authtoken')),
     path('', views.start_page),
     re_path("test", views.test),
     re_path("signup", views.signup),
     re_path("login", views.login),
+    re_path("logout", views.logout),
 ]

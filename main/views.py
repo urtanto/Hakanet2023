@@ -6,7 +6,7 @@ from Hakanet2023.serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -126,8 +126,7 @@ def signup(request: WSGIRequest) -> Response:
         user.set_password(request.data["password"])
         user.save()
         token = Token.objects.create(user=user)
-        return Response({"token": token.key,
-                         "user": serializer.data})
+        return Response({"token": token.key})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -138,8 +137,7 @@ def login(request) -> Response:
         return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
     token, created = Token.objects.get_or_create(user=user)
     serializer = UserSerializer(instance=user)
-    return Response({"token": token.key,
-                     "user": serializer.data})
+    return Response({"token": token.key})
 
 
 @api_view(["GET"])
@@ -147,3 +145,11 @@ def login(request) -> Response:
 @permission_classes([IsAuthenticated])
 def test(request: WSGIRequest) -> Response:
     return Response(f"passed for {request.user.username}")
+
+
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    request.session.flush()
+    return Response("nais")

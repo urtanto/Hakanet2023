@@ -9,4 +9,3 @@ class User(AbstractUser):
 
     :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
     """
-    order_status = models.CharField(max_length=255)

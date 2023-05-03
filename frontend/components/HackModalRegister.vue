@@ -1,7 +1,7 @@
 <template>
   <hack-modal idModal="registerModal" nameModal="Регистрация">
     <form @submit="register" action="#" class="flex flex-col gap-8">
-      <hack-input idInput="login" typeInput="login" nameInput="login" v-model.lazy.trim="formData.login.value">
+      <hack-input idInput="login" typeInput="login" nameInput="username" v-model.lazy.trim="formData.login.value">
         <div class="flex items-center">
           <svg fill="currentColor" class="w-5 h-5 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -35,7 +35,7 @@
         </div>
       </hack-input>
       <div class="flex items-center">
-        <input :checked="formData.accepted.value" id="checkbox-1" type="checkbox" value="accepted"
+        <input v-model="formData.accepted.value" id="checkbox-1" name="accepted" type="checkbox" value="accepted"
           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
         <label for="checkbox-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Я согласен с
           <nuxt-link to="#" class="text-blue-600 hover:underline dark:text-blue-500">правилами пользования
@@ -50,11 +50,25 @@
 </template>
 
 <script setup lang="ts">
-const formData = {
+const errorElemText = '<p data-error class="mt-2 text-sm text-red-600 dark:text-red-500">{}</p>'
+interface FormDataType extends Object {
+  email: Ref<String>
+  login: Ref<String>
+  password: Ref<String>
+  accepted: Ref<Boolean>
+  visiblePass: Ref<Boolean>
+}
+
+interface ErrorField extends Object {
+  msg: String
+  fieldName: String
+}
+
+const formData: FormDataType = {
   email: ref(""),
   login: ref(""),
   password: ref(""),
-  accepted: ref(false),
+  accepted: ref(true),
   visiblePass: ref(false),
 }
 
@@ -65,27 +79,119 @@ function changeMode(idInput: String) {
   else input?.setAttribute("type", "password")
 }
 
+function serialize(data: FormDataType) {
+  const errors: ErrorField[] = []
+  for (const field in data) {
+    if (data.hasOwnProperty(field)) {
+      const el = data[field]._value
+      if (field === "email") {
+        if (/\S+@\S+\.\S+/.test(el) === false) {
+          let error: ErrorField = {
+            msg: "Напишите действительный email!",
+            fieldName: field,
+          }
+          errors.push(error)
+        }
+      }
+      if (field === "accepted") {
+        if (el === false) {
+          let error: ErrorField = {
+            msg: "Требуется согласие с правилами пользования Сайта",
+            fieldName: field,
+          }
+          errors.push(error)
+        }
+      }
+      if (field === "password") {
+        if (el.length < 8) {
+          let error: ErrorField = {
+            msg: "Пароль должен быть не меньше 8 символов!",
+            fieldName: field,
+          }
+          errors.push(error)
+        }
+      }
+      if (field === "login") {
+        if (/\W|\N/gm.test(el) === true || el.length === 0) {
+          let error: ErrorField = {
+            msg: "В логине могут быть только символы латиницы и цифры!",
+            fieldName: field,
+          }
+          errors.push(error)
+        }
+      }
+    }
+  }
+  return errors
+}
+
+function removeErrors() {
+  document.querySelectorAll("[data-error]").forEach((el) => el.remove())
+  document.querySelectorAll("label").forEach((el) => {
+    el.classList.remove("!text-red-600")
+    el.classList.remove("!dark:text-red-500")
+  })
+  document.querySelectorAll("svg").forEach((el) => {
+    el.classList.remove("!text-red-600")
+    el.classList.remove("!dark:text-red-500")
+  })
+}
+
+function addErrors(errors: ErrorField[]) {
+  for (const error in errors) {
+    if (errors.hasOwnProperty(error)) {
+      const el = errors[error]
+      const fieldElParent = document.querySelector(`[name=${el.fieldName}]`)?.parentElement
+      fieldElParent?.querySelector("label")?.classList.add("!text-red-600")
+      fieldElParent?.querySelector("label")?.classList.add("!dark:text-red-500")
+      fieldElParent?.querySelector("svg")?.classList.add("!text-red-600")
+      fieldElParent?.querySelector("svg")?.classList.add("!dark:text-red-500")
+      fieldElParent?.insertAdjacentHTML("afterend", errorElemText.replace("{}", el.msg))
+    }
+  }
+}
+
 async function register(e: any) {
   e.preventDefault()
-  if (!formData.accepted.value) alert('Подтверди!')
-  return await $fetch("http://localhost:8000/auth/users/", {
+  removeErrors()
+  let errors = serialize(formData)
+  if (errors.length) {
+    addErrors(errors)
+    return 0
+  }
+  return await $fetch("http://localhost:8000/signup/", {
     method: "POST",
     mode: "cors",
     body: {
       username: formData.login.value,
       email: formData.email.value,
-      password: formData.password.value
+      password: formData.password.value,
     },
     responseType: "json",
     headers: {
-    "Content-Type": "application/json; charset=UTF-8"
+      "Content-Type": "application/json; charset=UTF-8",
     },
-    async onResponse({ request, options, response }) {
-      console.log(request, response, options)
-    },
-    async onRequestError({ request, options, error }) {
-    // Log error
-    console.log('[fetch request error]', request, error)
+    async onResponse({ response }) {
+      const data = response._data
+      const responseCode = response.status
+      if (data) {
+        if (responseCode != 200) {
+          const respErrors: ErrorField[] = []
+          for (const field in data) {
+            if (data.hasOwnProperty(field)) {
+              const el = data[field]
+              el.forEach((msg) => {
+                let error: ErrorField = {
+                  msg: msg,
+                  fieldName: field,
+                }
+                respErrors.push(error)
+              })
+            }
+          }
+          addErrors(respErrors)
+        }
+      }
     },
   })
 }

@@ -60,7 +60,7 @@ def photo_sort(request: WSGIRequest) -> JsonResponse:
     content = []
     for [path1, path2] in all_photos:
         img1 = open(path1, "rb").read()
-        img2 = open(path1, "rb").read()
+        img2 = open(path2, "rb").read()
         content.append([img1, img2])
 
     context = {

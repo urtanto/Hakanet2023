@@ -47,8 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
     'corsheaders',
 ]
 
@@ -154,17 +154,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'main/static/images/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'main.User'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ]
-}
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS))
+CORS_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS)) + \
+                       list(map(lambda x: f"http://{x}", ALLOWED_HOSTS))
 CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
 CORS_ALLOW_HEADERS = [

@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from main.views import start_page, check, auth_login, auth_logout
+from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
-    path('', start_page),
-    path("check/", check),
-    path("login/", auth_login),
-    path("logout/", auth_logout)
+    # path('auth/', include('djoser.urls')),
+    # re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('', views.start_page),
+    re_path("test", views.test),
+    re_path("signup", views.signup),
+    re_path("login", views.login),
 ]

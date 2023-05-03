@@ -1,18 +1,14 @@
-"""
-view functions
-"""
-import json
-
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-# from django.shortcuts import render
-from django.http import JsonResponse
 from django.core.handlers.wsgi import WSGIRequest
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.contrib.auth.hashers import make_password
-from django.views.decorators.http import require_POST
-
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
 from main.models import User, Photo, Article
+from Hakanet2023.serializers import UserSerializer
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 def get_name(x: User) -> str:
@@ -33,7 +29,7 @@ def get_names_of_articles(x: Article) -> str:
     return x.name
 
 
-def start_page(request: WSGIRequest) -> JsonResponse:
+def start_page(request: WSGIRequest) -> Response:
     """
     function of starting page
     """
@@ -42,10 +38,10 @@ def start_page(request: WSGIRequest) -> JsonResponse:
         "text": "starting page",
         "users": users,
     }
-    return JsonResponse(context)
+    return Response(context)
 
 
-def photo_sort(request: WSGIRequest) -> JsonResponse:
+def photo_sort(request: WSGIRequest) -> Response:
     type_of_product = request.GET["product"]
     type_of_stuff = request.GET["stuff"]
     type_of_time = request.GET["time"]
@@ -67,28 +63,20 @@ def photo_sort(request: WSGIRequest) -> JsonResponse:
         "photos": content
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-@login_required
-def check(request: WSGIRequest) -> JsonResponse:
-    """
-    simple check
-    """
-    return JsonResponse({"text": "okkkkk"})
-
-
-def get_all_articles(request: WSGIRequest):
+def get_all_articles(request: WSGIRequest) -> Response:
     content = list(map(get_names_of_articles, Article.objects.all()))
 
     context = {
         "names": content
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-def get_one_article(request: WSGIRequest):
+def get_one_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
     text = Article.objects.filter(name=name)[0].text
@@ -97,10 +85,10 @@ def get_one_article(request: WSGIRequest):
         "text": text
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-def get_comments_for_article(request: WSGIRequest):
+def get_comments_for_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
     id = Article.objects.filter(name=name)[0].id
@@ -116,32 +104,46 @@ def get_comments_for_article(request: WSGIRequest):
         "comments": comments
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-def make_article(request: WSGIRequest):
+def make_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     name = request.POST["name"]
 
     new_article = Article(user=1, text=text, name=name)
     new_article.save()
 
-    return
+    return Response("ok")
 
 
-@require_POST
-def auth_login(request):
-    username = request.POST["username"]
-    password = request.POST["password"]
-    # добавить необходимые проверки
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        login(request, user)
-        return JsonResponse({"detail": "Success"})
-    return JsonResponse({"detail": "Invalid credentials"}, status=400)
+@api_view(["POST"])
+def signup(request: WSGIRequest) -> Response:
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = get_user_model().objects.get(username=request.data["username"])
+        user.set_password(request.data["password"])
+        user.save()
+        token = Token.objects.create(user=user)
+        return Response({"token": token.key,
+                         "user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@require_POST
-def auth_logout(request):
-    logout(request)
-    return JsonResponse({"detail": "Logout Successful"})
+@api_view(["POST"])
+def login(request) -> Response:
+    user = get_object_or_404(get_user_model(), username=request.data["username"])
+    if not user.check_password(request.data["password"]):
+        return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
+    token, created = Token.objects.get_or_create(user=user)
+    serializer = UserSerializer(instance=user)
+    return Response({"token": token.key,
+                     "user": serializer.data})
+
+
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def test(request: WSGIRequest) -> Response:
+    return Response(f"passed for {request.user.username}")

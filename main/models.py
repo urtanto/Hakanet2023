@@ -4,32 +4,24 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
-class User(AbstractUser):
-    """
-    Класс пользователя
-
-    :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
-    """
-
-
-class Review_for_company(models.Model):
+class ReviewForCompany(models.Model):
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     comment = models.TextField()
 
 
-class Dirt_level(models.Model):
+class DirtLevel(models.Model):
     level = models.TextField()
 
 
-class Product_type(models.Model):
+class ProductType(models.Model):
     type = models.TextField()
 
 
-class Stuff_type(models.Model):
+class StuffType(models.Model):
     type = models.TextField()
 
 
-class Time_type(models.Model):
+class TimeType(models.Model):
     type = models.TextField()
 
 
@@ -41,10 +33,10 @@ class Service(models.Model):
 
 class Photo(models.Model):
     photo = models.ImageField()
-    type_of_product = models.ForeignKey(Product_type, models.CASCADE)
-    type_of_stuff = models.ForeignKey(Stuff_type, models.CASCADE)
-    type_of_time = models.ForeignKey(Time_type, models.CASCADE)
-    level_of_dirt = models.ForeignKey(Dirt_level, models.CASCADE)
+    type_of_product = models.ForeignKey(ProductType, models.CASCADE)
+    type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
+    type_of_time = models.ForeignKey(TimeType, models.CASCADE)
+    level_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
 
 
 class Article(models.Model):
@@ -52,7 +44,27 @@ class Article(models.Model):
     text = models.TextField()
 
 
-class Comment_for_Article(models.Model):
+class CommentForArticle(models.Model):
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     article = models.ForeignKey(Article, models.CASCADE)
     text = models.TextField()
+
+
+class Order(models.Model):
+    user = models.ForeignKey(get_user_model(), models.CASCADE)
+    service = models.ForeignKey(Service, models.CASCADE)
+    status = models.IntegerField()
+    type_of_product = models.ForeignKey(ProductType, models.CASCADE)
+    type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
+    level_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
+    type_of_time = models.ForeignKey(TimeType, models.CASCADE)
+
+
+class User(AbstractUser):
+    """
+    Класс пользователя
+
+    :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
+    """
+    super_user = models.BooleanField(default=False)
+

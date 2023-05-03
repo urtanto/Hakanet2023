@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")
 # DEBUG = True
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su", "api.stylelifeweb.su", "127.0.0.1", "testserver"]
+ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su", "api.stylelifeweb.su", "127.0.0.1", "testserver", "localhost"]
 
 # Application definition
 

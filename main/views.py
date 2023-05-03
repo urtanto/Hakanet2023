@@ -131,9 +131,8 @@ def make_article(request: WSGIRequest):
 
 @require_POST
 def auth_login(request):
-    data = json.loads(request.body)
-    username = data.get("username")
-    password = data.get("password")
+    username = request.POST["username"]
+    password = request.POST["password"]
     # добавить необходимые проверки
     user = authenticate(username=username, password=password)
     if user is not None:

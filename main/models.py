@@ -37,7 +37,7 @@ class TimeType(models.Model):
 class Service(models.Model):
     description = models.TextField()
     cost = models.FloatField()
-    name = models.TextField()
+    name = models.TextField(default="")
 
 
 class Photo(models.Model):
@@ -50,8 +50,7 @@ class Photo(models.Model):
 
 
 class Article(models.Model):
-    user = models.ForeignKey(get_user_model(), models.CASCADE)
-    name = models.TextField()
+    name = models.TextField(default="")
     text = models.TextField()
 
 

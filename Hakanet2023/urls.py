@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from main.views import start_page
+from main.views import start_page, auth_set_csrf_cookie
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
     path('', start_page),
+    path("auth/csrf/", auth_set_csrf_cookie),
 ]

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from main.views import start_page, auth_set_csrf_cookie, registration
+from main.views import start_page, auth_set_csrf_cookie, registration, check
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,5 @@ urlpatterns = [
     path('', start_page),
     path("csrf/", auth_set_csrf_cookie),
     path("register/", registration),
+    path("check/", check),
 ]

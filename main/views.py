@@ -8,9 +8,16 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.hashers import make_password
 from main.models import User
 
+from PIL import Image
+from main.models import User, Photo
+
 
 def get_name(x: User) -> str:
     return x.username
+
+
+def get_image_path(x: Photo) -> list:
+    return [x.photo_before, x.photo_after]
 
 
 @ensure_csrf_cookie
@@ -35,4 +42,29 @@ def start_page(request: WSGIRequest) -> JsonResponse:
         "text": "starting page",
         "users": users,
     }
+    return JsonResponse(context)
+
+
+def photo_sort(request: WSGIRequest) -> JsonResponse:
+    type_of_product = request.GET["product"]
+    type_of_stuff = request.GET["stuff"]
+    type_of_time = request.GET["time"]
+    level_of_dirt = request.GET["dirt"]
+
+    all_photos_objective = Photo.objects.filter(type_of_product=type_of_product,
+                                                type_of_time=type_of_time,
+                                                level_of_dirt=level_of_dirt,
+                                                type_of_stuff=type_of_stuff)
+
+    all_photos = list(map(get_image_path, all_photos_objective))
+    content = []
+    for [path1, path2] in all_photos:
+        img1 = open(path1, "rb").read()
+        img2 = open(path2, "rb").read()
+        content.append([img1, img2])
+
+    context = {
+        "photos": content
+    }
+
     return JsonResponse(context)

@@ -20,8 +20,8 @@ def get_image_path(x: Photo) -> list:
     return [x.photo_before, x.photo_after]
 
 
-def get_names_of_articles(x: Article) -> str:
-    return x.name
+def get_names_of_articles(x: Article) -> list:
+    return [x.name, x.id]
 
 
 @ensure_csrf_cookie
@@ -90,12 +90,15 @@ def get_all_articles(request: WSGIRequest):
 
 
 def get_one_article(request: WSGIRequest):
-    name = request.GET["name"]
+    id = request.GET["id"]
 
-    text = Article.objects.filter(name=name)[0].text
+    article = Article.objects.filter(id=id)[0]
+    name = article.name
+    text = article.text
 
     context = {
-        "text": text
+        "text": text,
+        "name": name
     }
 
     return JsonResponse(context)
@@ -120,17 +123,15 @@ def get_comments_for_article(request: WSGIRequest):
     return JsonResponse(context)
 
 
-def create_article(request: WSGIRequest):
+def make_article(request: WSGIRequest):
     text = request.POST["text"]
     name = request.POST["name"]
 
     new_article = Article(text=text, name=name)
     new_article.save()
 
-    print(new_article)
-
     context = {
-        "ans": "ok"
+        "ok": "ok"
     }
 
     return JsonResponse(context)

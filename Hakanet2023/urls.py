@@ -24,5 +24,5 @@ urlpatterns = [
     re_path(r'^auth/', include('djoser.urls.authtoken')),
     path('', start_page),
     path("csrf/", auth_set_csrf_cookie),
-    path("register/", registration)
+    path("register/", registration),
 ]

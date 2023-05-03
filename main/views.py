@@ -54,14 +54,59 @@ def get_names_of_articles(x: Article) -> list:
 
 
 @api_view(["GET"])
-def start_page(request: WSGIRequest) -> Response:
-    """
-    function of starting page
-    """
-    users = list(map(get_name, User.objects.all()))
-    context = {
-        "text": "starting page",
-        "users": users,
+def get_main_page(request: WSGIRequest) -> Response:
+    context = {"services": [
+        {
+            "name": "first",
+            "cost": 2050.20,
+            "description": "da " * 100
+        },
+        {
+            "name": "second",
+            "cost": 4450.55,
+            "description": "net " * 100
+        },
+    ],
+        "comments": [
+            {
+                "user": {
+                    "username": "da",
+                    "first_name": "A.",
+                    "second_name": "B",
+                    "picture": open("static/images/default.png", "rb").read()
+                },
+                "comment": "some text" * 50
+            }
+        ]
+    }
+    return Response(context)
+
+
+@api_view(["GET"])
+def get_services(request: WSGIRequest) -> Response:
+    context = {"services": [
+        {
+            "name": "first",
+            "cost": 2050.20,
+            "description": "da " * 100
+        },
+        {
+            "name": "second",
+            "cost": 4450.55,
+            "description": "net " * 100
+        },
+    ]
+    }
+    return Response(context)
+
+
+@api_view(["GET"])
+def get_services(request: WSGIRequest) -> Response:
+    context = {"services": {
+            "name": "first",
+            "cost": 2050.20,
+            "description": "da " * 100
+        }
     }
     return Response(context)
 

@@ -68,3 +68,8 @@ class Order(models.Model):
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     level_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)
+
+
+class BlackListToken(models.Model):
+    user = models.ForeignKey(get_user_model(), models.CASCADE)
+    token = models.CharField(max_length=255)

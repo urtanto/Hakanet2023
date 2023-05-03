@@ -6,7 +6,7 @@ from Hakanet2023.serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -136,7 +136,6 @@ def login(request) -> Response:
     if not user.check_password(request.data["password"]):
         return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
     token, created = Token.objects.get_or_create(user=user)
-    serializer = UserSerializer(instance=user)
     return Response({"token": token.key})
 
 
@@ -151,5 +150,4 @@ def test(request: WSGIRequest) -> Response:
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def logout(request):
-    request.session.flush()
-    return Response("nais")
+    return Response({"h": request.headers})

@@ -23,6 +23,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
     path('', start_page),
-    path("auth/csrf/", auth_set_csrf_cookie),
-    path("registr/", registration)
+    path("csrf/", auth_set_csrf_cookie),
+    path("register/", registration)
 ]

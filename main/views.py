@@ -151,3 +151,10 @@ def test(request: WSGIRequest) -> Response:
 @permission_classes([IsAuthenticated])
 def logout(request):
     return Response({"h": request.headers})
+
+
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user(request):
+    return Response({"user": request.user})

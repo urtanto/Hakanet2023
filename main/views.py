@@ -1,6 +1,7 @@
 """
 view functions
 """
+from django.contrib.auth.decorators import login_required
 # from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.handlers.wsgi import WSGIRequest
@@ -71,6 +72,11 @@ def photo_sort(request: WSGIRequest) -> JsonResponse:
     }
 
     return JsonResponse(context)
+
+
+@login_required
+def check(request: WSGIRequest) -> JsonResponse:
+    return JsonResponse({"text": "okkkkk"})
 
 
 def get_all_articles(request: WSGIRequest):

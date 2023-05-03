@@ -53,6 +53,7 @@ def get_names_of_articles(x: Article) -> str:
     return x.name
 
 
+@api_view(["GET"])
 def start_page(request: WSGIRequest) -> Response:
     """
     function of starting page
@@ -65,6 +66,7 @@ def start_page(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["GET"])
 def photo_sort(request: WSGIRequest) -> Response:
     type_of_product = request.GET["product"]
     type_of_stuff = request.GET["stuff"]
@@ -90,6 +92,7 @@ def photo_sort(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["GET"])
 def get_all_articles(request: WSGIRequest) -> Response:
     content = list(map(get_names_of_articles, Article.objects.all()))
 
@@ -100,6 +103,7 @@ def get_all_articles(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["GET"])
 def get_one_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
@@ -112,6 +116,7 @@ def get_one_article(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["GET"])
 def get_comments_for_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
@@ -131,6 +136,7 @@ def get_comments_for_article(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["POST"])
 def make_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     name = request.POST["name"]
@@ -171,7 +177,7 @@ def test(request: WSGIRequest) -> Response:
 @need_login(["POST"])
 def logout(request):
     Token.objects.get(user=request.user).delete()
-    return Response("logout")
+    return Response("successful")
 
 
 @need_login(["GET"])

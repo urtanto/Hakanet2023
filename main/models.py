@@ -40,8 +40,8 @@ class Service(models.Model):
 
 
 class Photo(models.Model):
-    photo_before = models.ImageField()
-    photo_after = models.ImageField()
+    photo_before = models.ImageField(default="default.png")
+    photo_after = models.ImageField(default="default.png")
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)

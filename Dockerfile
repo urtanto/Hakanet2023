@@ -2,7 +2,7 @@ FROM python:3.10-alpine
 LABEL authors="urtanto"
 
 RUN mkdir proj
-WORKDIR proj
+WORKDIR /proj
 
 ENV PYTHONUNBUFFERED 1
 ENV Server_starts "true"

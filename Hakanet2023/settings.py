@@ -153,3 +153,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ALLOWED_HOSTS
+CSRF_COOKIE_NAME = "XSRF-TOKEN"
+
+CORS_ALLOW_HEADERS = [
+    "x-xsrf-token",
+]

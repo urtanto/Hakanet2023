@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'main',
     'rest_framework.authtoken',
     'djoser',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Hakanet2023.urls'
@@ -139,7 +141,10 @@ STATIC_URL = 'main/static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'main/static'),
+]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'main/static/images/')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -153,8 +158,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = ALLOWED_HOSTS
+CORS_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS))
 CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
 CORS_ALLOW_HEADERS = [

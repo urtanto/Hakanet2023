@@ -169,4 +169,5 @@ CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
 CORS_ALLOW_HEADERS = [
     "x-xsrf-token",
+    "Content-Type"
 ]

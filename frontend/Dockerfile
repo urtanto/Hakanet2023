@@ -2,7 +2,7 @@ FROM node:19.9-alpine3.17
 LABEL authors="urtanto"
 
 RUN mkdir front
-WORKDIR front
+WORKDIR /front
 
 ADD package.json /front/
 

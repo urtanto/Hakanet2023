@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su", "api.stylelifeweb.su", "127.0.0
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

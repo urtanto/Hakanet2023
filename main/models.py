@@ -4,6 +4,15 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
+class User(AbstractUser):
+    """
+    Класс пользователя
+
+    :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
+    """
+    super_user = models.BooleanField(default=False)
+
+
 class ReviewForCompany(models.Model):
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     comment = models.TextField()
@@ -58,13 +67,3 @@ class Order(models.Model):
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     level_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)
-
-
-class User(AbstractUser):
-    """
-    Класс пользователя
-
-    :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
-    """
-    super_user = models.BooleanField(default=False)
-

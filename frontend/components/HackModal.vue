@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineProps } from "vue"
+import { onMounted } from "vue"
 defineProps({
   idModal: {
     type: String,

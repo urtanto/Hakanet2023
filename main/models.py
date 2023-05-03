@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -50,6 +49,7 @@ class Photo(models.Model):
 
 
 class Article(models.Model):
+    user = models.ForeignKey(get_user_model(), models.CASCADE)
     name = models.TextField(default="")
     text = models.TextField()
 

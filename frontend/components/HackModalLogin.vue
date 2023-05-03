@@ -5,13 +5,14 @@
   >
     <form
       action="#"
+      @submit="login"
       class="flex flex-col gap-8"
     >
       <hack-input
         idInput="loginLog"
         typeInput="login"
         nameInput="loginLog"
-        v-model.trim.lazy="login"
+        v-model.trim.lazy="formData.login.value"
       >
         <div class="flex items-center">
           <svg
@@ -34,9 +35,9 @@
         idInput="passwordLog"
         typeInput="password"
         nameInput="passwordLog"
-        :visible="visible"
+        :visible="formData.visiblePass.value"
         @changeMode="changeMode"
-        v-model.trim.lazy="password"
+        v-model.trim.lazy="formData.password.value"
       >
         <div class="flex items-center">
           <svg
@@ -58,13 +59,15 @@
       <div class="flex items-center">
         <input
           checked
-          id="checkbox-1"
+          id="checkboxlog"
+          name="checkboxlog"
           type="checkbox"
-          value="accepted"
+          :value="formData.accepted"
           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
         <label
-          for="checkbox-1"
+          for="checkboxlog"
+          name="checkboxlog"
           class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
           >Я согласен с
           <nuxt-link
@@ -84,25 +87,64 @@
   </hack-modal>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+const formData = {
+  login: ref(""),
+  password: ref(""),
+  accepted: ref(false),
+  visiblePass: ref(false),
+}
 
-export default defineComponent({
-  data() {
-    return {
-      visible: false,
-      login: "",
-      password: "",
-    }
-  },
-  methods: {
-    changeMode(idInput: String) {
-      this.visible = !this.visible
-      console.log(this.visible, idInput)
-      const input = document.querySelector("#" + idInput)
-      if (this.visible) input?.setAttribute("type", "text")
-      else input?.setAttribute("type", "password")
+function changeMode(idInput: String) {
+  formData.visiblePass.value = !formData.visiblePass.value
+  let input = document.querySelector("#" + idInput)
+  if (formData.visiblePass.value) input?.setAttribute("type", "text")
+  else input?.setAttribute("type", "password")
+}
+
+async function login(e: any) {
+  e.preventDefault()
+  const authToken = await $fetch("http://localhost:8000/auth/token/login/", {
+    method: "POST",
+    mode: "cors",
+    body: {
+      username: formData.login.value,
+      password: formData.password.value
     },
-  },
-})
+    parseResponse: JSON.parse,
+    responseType: "json",
+    headers: {
+    "Content-Type": "application/json; charset=UTF-8"
+    },
+    async onResponse({ request, options, response }) {
+      return response._data?.auth_token
+    },
+    async onRequestError({ request, options, error }) {
+    // Log error
+    console.log('[fetch request error]', request, error)
+    }
+  })
+  if (authToken) {
+    return  await $fetch("http://localhost:8000/auth/users/me", {
+    method: "POST",
+    mode: "cors",
+    body: {
+      username: formData.login.value,
+      password: formData.password.value
+    },
+    parseResponse: JSON.parse,
+    responseType: "json",
+    headers: {
+    "Content-Type": "application/json; charset=UTF-8"
+    },
+    async onResponse({ request, options, response }) {
+      return response._data?.auth_token
+    },
+    async onRequestError({ request, options, error }) {
+    // Log error
+    console.log('[fetch request error]', request, error)
+    }
+  })
+  }
+}
 </script>

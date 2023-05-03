@@ -1,22 +1,51 @@
-"""
-view functions
-"""
-from django.contrib.auth.decorators import login_required
-# from django.shortcuts import render
-from django.http import JsonResponse
 from django.core.handlers.wsgi import WSGIRequest
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.contrib.auth.hashers import make_password
-from main.models import User
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from Hakanet2023.serializers import UserSerializer
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from main.models import User, Photo, Article
 
 
+def get_token(request: WSGIRequest) -> str:
+    return request.headers.get("Authorization").split()[1]
+
+
+def need_login(method: list):
+    """
+    simple decorator
+    :param method: GET/POST
+    :return: func
+    """
+
+    def need_login_decorator(func):
+        @api_view(method)
+        @authentication_classes([SessionAuthentication, TokenAuthentication])
+        @permission_classes([IsAuthenticated])
+        def wrapped(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return wrapped
+
+    return need_login_decorator
+
+
 def get_name(x: User) -> str:
+    """
+    function getting user's name
+    """
     return x.username
 
 
 def get_image_path(x: Photo) -> list:
+    """
+    function getting path of 2 images
+    """
     return [x.photo_before, x.photo_after]
 
 
@@ -24,32 +53,21 @@ def get_names_of_articles(x: Article) -> list:
     return [x.name, x.id]
 
 
-@ensure_csrf_cookie
-def auth_set_csrf_cookie(request):
-    return JsonResponse({"details": "CSRF cookie set"})
-
-
-def registration(request: WSGIRequest) -> JsonResponse:
-    if request.method == "POST":
-        user = User(username=request.POST['username'],
-                    password=make_password(request.POST['password']),
-                    email=request.POST['email'])
-        user.save()
-        return JsonResponse({"text": "ok"})
-    return JsonResponse({"error"})
-
-
-def start_page(request: WSGIRequest) -> JsonResponse:
-    """function of starting page"""
+@api_view(["GET"])
+def start_page(request: WSGIRequest) -> Response:
+    """
+    function of starting page
+    """
     users = list(map(get_name, User.objects.all()))
     context = {
         "text": "starting page",
         "users": users,
     }
-    return JsonResponse(context)
+    return Response(context)
 
 
-def photo_sort(request: WSGIRequest) -> JsonResponse:
+@api_view(["GET"])
+def photo_sort(request: WSGIRequest) -> Response:
     type_of_product = request.GET["product"]
     type_of_stuff = request.GET["stuff"]
     type_of_time = request.GET["time"]
@@ -71,26 +89,23 @@ def photo_sort(request: WSGIRequest) -> JsonResponse:
         "photos": content
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-@login_required
-def check(request: WSGIRequest) -> JsonResponse:
-    return JsonResponse({"text": "okkkkk"})
-
-
-def get_all_articles(request: WSGIRequest):
+@api_view(["GET"])
+def get_all_articles(request: WSGIRequest) -> Response:
     content = list(map(get_names_of_articles, Article.objects.all()))
 
     context = {
         "names": content
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-def get_one_article(request: WSGIRequest):
-    id = request.GET["id"]
+@api_view(["GET"])
+def get_one_article(request: WSGIRequest) -> Response:
+    name = request.GET["name"]
 
     article = Article.objects.filter(id=id)[0]
     name = article.name
@@ -101,10 +116,11 @@ def get_one_article(request: WSGIRequest):
         "name": name
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-def get_comments_for_article(request: WSGIRequest):
+@api_view(["GET"])
+def get_comments_for_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
     id = Article.objects.filter(name=name)[0].id
@@ -120,10 +136,11 @@ def get_comments_for_article(request: WSGIRequest):
         "comments": comments
     }
 
-    return JsonResponse(context)
+    return Response(context)
 
 
-def make_article(request: WSGIRequest):
+@api_view(["POST"])
+def make_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     name = request.POST["name"]
 
@@ -134,4 +151,54 @@ def make_article(request: WSGIRequest):
         "ok": "ok"
     }
 
-    return JsonResponse(context)
+    return Response("ok")
+
+
+@api_view(["POST"])
+def signup(request: WSGIRequest) -> Response:
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = get_user_model().objects.get(username=request.data["username"])
+        user.set_password(request.data["password"])
+        user.save()
+        token = Token.objects.create(user=user)
+        return Response({"token": token.key})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def login(request) -> Response:
+    user = get_object_or_404(get_user_model(), username=request.data["username"])
+    if not user.check_password(request.data["password"]):
+        return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({"token": token.key})
+
+
+@need_login(["GET"])
+def test(request: WSGIRequest) -> Response:
+    return Response(f"passed for {request.user.username}")
+
+
+@need_login(["POST"])
+def logout(request):
+    Token.objects.get(user=request.user).delete()
+    return Response("successful")
+
+
+@need_login(["GET"])
+def get_user(request):
+    print(request.user.__dict__)
+    user = {}
+    waste_keys = [
+        "id",
+        "_state",
+        "password",
+        "super_user",
+        "is_staff",
+    ]
+    for key in request.user.__dict__:
+        if key not in waste_keys:
+            user[key] = request.user.__dict__[key]
+    return Response({"user": user})

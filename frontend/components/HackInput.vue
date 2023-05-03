@@ -56,7 +56,7 @@ export default defineComponent({
     },
   },
   methods: {
-    updateInput(e: Event) {
+    updateInput(e: any) {
       this.$emit("update:modelValue", e?.target.value)
     },
   },

@@ -1,7 +1,6 @@
 from django.core.handlers.wsgi import WSGIRequest
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
-from main.models import User, Photo, Article
 from Hakanet2023.serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -9,6 +8,31 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
+from main.models import User, Photo, Article
+
+
+def get_token(request: WSGIRequest) -> str:
+    return request.headers.get("Authorization").split()[1]
+
+
+def need_login(method: list):
+    """
+    simple decorator
+    :param method: GET/POST
+    :return: func
+    """
+
+    def need_login_decorator(func):
+        @api_view(method)
+        @authentication_classes([SessionAuthentication, TokenAuthentication])
+        @permission_classes([IsAuthenticated])
+        def wrapped(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return wrapped
+
+    return need_login_decorator
 
 
 def get_name(x: User) -> str:
@@ -135,27 +159,22 @@ def login(request) -> Response:
     user = get_object_or_404(get_user_model(), username=request.data["username"])
     if not user.check_password(request.data["password"]):
         return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
-    token, created = Token.objects.get_or_create(user=user)
+    token, _ = Token.objects.get_or_create(user=user)
     return Response({"token": token.key})
 
 
-@api_view(["GET"])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@need_login(["GET"])
 def test(request: WSGIRequest) -> Response:
     return Response(f"passed for {request.user.username}")
 
 
-@api_view(["POST"])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@need_login(["POST"])
 def logout(request):
-    return Response({"h": request.headers})
+    Token.objects.get(user=request.user).delete()
+    return Response("logout")
 
 
-@api_view(["GET"])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@need_login(["GET"])
 def get_user(request):
     print(request.user.__dict__)
     user = {}

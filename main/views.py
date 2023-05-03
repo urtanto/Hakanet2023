@@ -118,3 +118,13 @@ def get_comments_for_article(request: WSGIRequest):
     }
 
     return JsonResponse(context)
+
+
+def make_article(request: WSGIRequest):
+    text = request.POST["text"]
+    name = request.POST["name"]
+
+    new_article = Article(user=1, text=text, name=name)
+    new_article.save()
+
+    return

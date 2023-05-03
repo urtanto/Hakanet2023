@@ -12,7 +12,6 @@ class User(AbstractUser):
     """
     super_user = models.BooleanField(default=False)
 
-
 class ReviewForCompany(models.Model):
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     comment = models.TextField()
@@ -41,7 +40,8 @@ class Service(models.Model):
 
 
 class Photo(models.Model):
-    photo = models.ImageField()
+    photo_before = models.ImageField()
+    photo_after = models.ImageField()
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)

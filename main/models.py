@@ -12,6 +12,7 @@ class User(AbstractUser):
     """
     super_user = models.BooleanField(default=False)
 
+
 class ReviewForCompany(models.Model):
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     comment = models.TextField()

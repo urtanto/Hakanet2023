@@ -8,8 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.hashers import make_password
 from main.models import User
 
-from PIL import Image
-from main.models import User, Photo
+from main.models import User, Photo, Article
 
 
 def get_name(x: User) -> str:
@@ -18,6 +17,10 @@ def get_name(x: User) -> str:
 
 def get_image_path(x: Photo) -> list:
     return [x.photo_before, x.photo_after]
+
+
+def get_names_of_articles(x: Article) -> str:
+    return x.name
 
 
 @ensure_csrf_cookie
@@ -65,6 +68,47 @@ def photo_sort(request: WSGIRequest) -> JsonResponse:
 
     context = {
         "photos": content
+    }
+
+    return JsonResponse(context)
+
+
+def get_all_articles(request: WSGIRequest):
+    content = list(map(get_names_of_articles, Article.objects.all()))
+
+    context = {
+        "names": content
+    }
+
+    return JsonResponse(context)
+
+
+def get_one_article(request: WSGIRequest):
+    name = request.GET["name"]
+
+    text = Article.objects.filter(name=name)[0].text
+
+    context = {
+        "text": text
+    }
+
+    return JsonResponse(context)
+
+
+def get_comments_for_article(request: WSGIRequest):
+    name = request.GET["name"]
+
+    id = Article.objects.filter(name=name)[0].id
+    comments_objective = Article.objects.get(name=name).commentforarticle_set.all()
+
+    comments = []
+    for i in comments_objective:
+        comment_user = i.user.username
+        comment_text = i.text
+        comments.append([comment_user, comment_text])
+
+    context = {
+        "comments": comments
     }
 
     return JsonResponse(context)

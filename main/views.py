@@ -643,9 +643,10 @@ def get_orders(request: WSGIRequest) -> Response:
 # тут юзер post
 @need_login(["POST"])
 def make_review(request: WSGIRequest) -> Response:
-    text = request.POST["review_text"]
+    print(request.__dict__)
+    text = request.data["review_text"]
 
-    new_com = ReviewForCompany(user=request.user, text=text)
+    new_com = ReviewForCompany(user=request.user, comment=text)
     new_com.save()
 
     return Response({"ans": "ok"})

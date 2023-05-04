@@ -1,7 +1,7 @@
 <template>
   <hack-modal idModal="registerModal" nameModal="Регистрация">
     <form @submit="register" action="#" class="flex flex-col gap-8">
-      <hack-input idInput="login" typeInput="login" nameInput="username" v-model.lazy.trim="formData.login.value">
+      <hack-input idInput="login" typeInput="login" nameInput="username" v-model.lazy.trim="formData.username.value">
         <div class="flex items-center">
           <svg fill="currentColor" class="w-5 h-5 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -53,7 +53,7 @@
 const errorElemText = '<p data-error class="mt-2 text-sm text-red-600 dark:text-red-500">{}</p>'
 interface FormDataType extends Object {
   email: Ref<String>
-  login: Ref<String>
+  username: Ref<String>
   password: Ref<String>
   accepted: Ref<Boolean>
   visiblePass: Ref<Boolean>
@@ -66,7 +66,7 @@ interface ErrorField extends Object {
 
 const formData: FormDataType = {
   email: ref(""),
-  login: ref(""),
+  username: ref(""),
   password: ref(""),
   accepted: ref(true),
   visiblePass: ref(false),
@@ -111,7 +111,7 @@ function serialize(data: FormDataType) {
           errors.push(error)
         }
       }
-      if (field === "login") {
+      if (field === "username") {
         if (/\W|\N/gm.test(el) === true || el.length === 0) {
           let error: ErrorField = {
             msg: "В логине могут быть только символы латиницы и цифры!",
@@ -163,7 +163,7 @@ async function register(e: any) {
     method: "POST",
     mode: "cors",
     body: {
-      username: formData.login.value,
+      username: formData.username.value,
       email: formData.email.value,
       password: formData.password.value,
     },

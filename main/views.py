@@ -25,7 +25,7 @@ from main.models import User, Photo, Article, StuffType, TimeType, DirtType, Com
 def get_product_type_choices():
     """
     Getting all types of product
-    :return:
+    :return: tuple of (id, name)
     """
     obj = ProductType.objects.all()
     data = []
@@ -35,6 +35,10 @@ def get_product_type_choices():
 
 
 def get_stuff_type_choices():
+    """
+    Getting all types of stuff
+    :return: tuple of (id, name)
+    """
     obj = StuffType.objects.all()
     data = []
     for i in range(len(obj)):
@@ -1101,6 +1105,8 @@ def admin_time_delete(request: WSGIRequest, type_id: int):
     time_type: TimeType = TimeType.objects.get(id=type_id)
     time_type.delete()
     return redirect(f"/admin/time/view/delete/?u={context['username']}&p={context['password']}")
+
+
 # ends time
 
 

@@ -1,3 +1,4 @@
+from django.core.files.storage import FileSystemStorage
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
@@ -10,15 +11,6 @@ from django.shortcuts import get_object_or_404
 from Hakanet2023.serializers import UserSerializer
 
 from main.models import User, Photo, Article
-
-
-def get_token(request: WSGIRequest) -> str:
-    """
-    Getting authorization token from request
-    :param request: request with token
-    :return: only token
-    """
-    return request.headers.get("Authorization").split()[1]
 
 
 def need_login(method: list):
@@ -38,6 +30,15 @@ def need_login(method: list):
         return wrapped
 
     return need_login_decorator
+
+
+def get_token(request: WSGIRequest) -> str:
+    """
+    Getting authorization token from request
+    :param request: request with token
+    :return: only token
+    """
+    return request.headers.get("Authorization").split()[1]
 
 
 def get_name(x: User) -> str:
@@ -227,7 +228,6 @@ def get_comments_for_article(request: WSGIRequest) -> Response:
 def make_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     name = request.POST["name"]
-
     new_article = Article(text=text, name=name)
     new_article.save()
 
@@ -241,7 +241,6 @@ def test(request: WSGIRequest) -> Response:
 
 @need_login(["GET"])
 def get_user(request):
-    print(request.user.__dict__)
     user = {}
     waste_keys = [
         "id",
@@ -254,3 +253,24 @@ def get_user(request):
         if key not in waste_keys:
             user[key] = request.user.__dict__[key]
     return Response({"user": user})
+
+
+@need_login(["POST"])
+def image_upload(request: WSGIRequest) -> Response:
+    file = request.FILES['file']
+    fs = FileSystemStorage()
+    fs.save(file.name, file.file)
+    return Response({"filename": file.name})
+
+
+@need_login(["POST"])
+def photo_upload(request: WSGIRequest) -> Response:
+    photo = Photo(
+        photo_before=request.POST["filename_before"],
+        photo_after=request.POST["filename_after"],
+        type_of_product="",
+        type_of_stuff="",
+        type_of_dirt="",
+        type_of_time="",
+    )
+    return Response("saved")

@@ -68,7 +68,7 @@ class Photo(models.Model):
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)
-    level_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
+    type_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
 
 
 class Article(models.Model):

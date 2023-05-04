@@ -30,4 +30,5 @@ urlpatterns = [
     re_path("get/main_page", views.get_main_page),
     re_path("get/services", views.get_services),
     re_path("get/service/<int:service_id>", views.get_services),
+    re_path("image_upload", views.image_upload),
 ]

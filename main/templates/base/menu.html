@@ -3,7 +3,7 @@
         {% for item in menu %}
             {% if item|is_drop %}
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
+                    <button id="btnGroupDrop1" type="button" class="btn btn-success dropdown-toggle"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         {{ item.0 }}
                     </button>
@@ -24,7 +24,7 @@
                     </ul>
                 </div>
             {% else %}
-                <a class="btn btn-primary "
+                <a class="btn btn-success "
                    href="{% url item.url_name %}?u={{ username }}&p={{ password }}">{{ item.name }}</a>
             {% endif %}
         {% endfor %}

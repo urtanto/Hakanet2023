@@ -27,7 +27,7 @@ class PhotoUploadForm(forms.Form):
 
 
 class ProductCreateForm(forms.Form):
-    name = forms.CharField(label="Название изделия",
+    name = forms.CharField(label="Название типа изделия",
                            max_length=255,
                            widget=TextInput(attrs={"class": "form-control"}))
 
@@ -35,4 +35,40 @@ class ProductCreateForm(forms.Form):
 class ProductEditForm(forms.ModelForm):
     class Meta:
         model = ProductType
+        fields = ['type']
+
+
+class StuffCreateForm(forms.Form):
+    name = forms.CharField(label="Название типа материала",
+                           max_length=255,
+                           widget=TextInput(attrs={"class": "form-control"}))
+
+
+class StuffEditForm(forms.ModelForm):
+    class Meta:
+        model = StuffType
+        fields = ['type']
+
+
+class DirtCreateForm(forms.Form):
+    name = forms.CharField(label="Название типа загрязненности",
+                           max_length=255,
+                           widget=TextInput(attrs={"class": "form-control"}))
+
+
+class DirtEditForm(forms.ModelForm):
+    class Meta:
+        model = DirtType
+        fields = ['type']
+
+
+class TimeCreateForm(forms.Form):
+    name = forms.CharField(label="Название типа срочности",
+                           max_length=255,
+                           widget=TextInput(attrs={"class": "form-control"}))
+
+
+class TimeEditForm(forms.ModelForm):
+    class Meta:
+        model = TimeType
         fields = ['type']

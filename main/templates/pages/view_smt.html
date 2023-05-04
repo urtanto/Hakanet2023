@@ -7,6 +7,12 @@
 {% endblock %}
 
 {% block content %}
+    {% if action_type == "edit" %}
+        <h3>Редактирование типов {{ expected_type }}</h3>
+    {% else %}
+        <h3>Удаление типов {{ expected_type }}</h3>
+    {% endif %}
+    <div style="width: 100%; height: 2%;"></div>
     <div style="display: flex; flex-wrap: wrap; justify-content: left; width: 100%; gap: 2vh;">
         {% for item in data %}
             <ul class="list-group list-group-horizontal">
@@ -14,12 +20,12 @@
                 {% if action_type == "edit" %}
                     <li class="list-group-item">
                         <a class="btn btn-primary"
-                           href="{% url 'product_edit' type_id=item.id %}?u={{ username }}&p={{ password }}">Edit</a>
+                           href="{% url url_edit type_id=item.id %}?u={{ username }}&p={{ password }}">Edit</a>
                     </li>
                 {% else %}
                     <li class="list-group-item">
                         <a class="btn btn-danger"
-                           href="{% url 'product_delete' type_id=item.id %}?u={{ username }}&p={{ password }}">Delete</a>
+                           href="{% url url_delete type_id=item.id %}?u={{ username }}&p={{ password }}">Delete</a>
                     </li>
                 {% endif %}
             </ul>

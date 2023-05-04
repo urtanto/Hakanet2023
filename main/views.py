@@ -16,7 +16,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from Hakanet2023.serializers import UserSerializer
 
 from Hakanet2023.settings import BASE_DIR
-from main.forms import PhotoUploadForm, ProductCreateForm, ProductEditForm
+from main.forms import PhotoUploadForm, ProductCreateForm, ProductEditForm, StuffCreateForm, StuffEditForm, \
+    DirtCreateForm, DirtEditForm, TimeCreateForm, TimeEditForm
 from main.models import User, Photo, Article, StuffType, TimeType, DirtType, CommentForArticle, Order, ReviewForCompany, \
     ProductType
 
@@ -80,6 +81,8 @@ def front(func):
         request: WSGIRequest = args[0]
         user = get_object_or_404(get_user_model(), username=request.GET.get("u", None))
         if not user.check_password(request.GET.get("p")):
+            return redirect(reverse("error"))
+        if not user.super_user:
             return redirect(reverse("error"))
         return func(*args, **kwargs)
 
@@ -522,7 +525,6 @@ def delete_comment_for_article(request: WSGIRequest) -> Response:
     id_ = request.POST["id"]
 
     comment = DirtType.objects.filter(id=id_)[0]
-
     comment.delete()
 
     return Response({"ans": "ok"})
@@ -577,7 +579,11 @@ def get_menu_context():
             {'url_name': 'admin', 'name': 'Редактировать'},
             {'url_name': 'admin', 'name': 'Удалить'},
         ],
-        {'url_name': 'photo_upload', 'name': 'Загрузить фото'},
+        [
+            "Фото до/после",
+            {'url_name': 'photo_upload', 'name': 'Загрузить фото'},
+            {'url_name': 'photo_view', 'name': 'Удалить фото'},
+        ],
         [
             "Типы Изделия",
             {'url_name': 'product_create', 'name': 'Создать'},
@@ -586,21 +592,21 @@ def get_menu_context():
         ],
         [
             "Типы Материла",
-            {'url_name': 'admin', 'name': 'Создать'},
-            {'url_name': 'admin', 'name': 'Редактировать'},
-            {'url_name': 'admin', 'name': 'Удалить'},
+            {'url_name': 'stuff_create', 'name': 'Создать'},
+            {'url_name': 'stuff_view_edit', 'name': 'Редактировать', "action_type": "edit"},
+            {'url_name': 'stuff_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
         [
             "Типы Загрязненности",
-            {'url_name': 'admin', 'name': 'Создавать'},
-            {'url_name': 'admin', 'name': 'Редактировать'},
-            {'url_name': 'admin', 'name': 'Удалить'},
+            {'url_name': 'dirt_create', 'name': 'Создавать'},
+            {'url_name': 'dirt_view_edit', 'name': 'Редактировать', "action_type": "edit"},
+            {'url_name': 'dirt_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
         [
             "Типы Срочности",
-            {'url_name': 'admin', 'name': 'Создать'},
-            {'url_name': 'admin', 'name': 'Редактировать'},
-            {'url_name': 'admin', 'name': 'Удалить'},
+            {'url_name': 'time_create', 'name': 'Создать'},
+            {'url_name': 'time_view_edit', 'name': 'Редактировать', "action_type": "edit"},
+            {'url_name': 'time_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
         {'url_name': 'admin', 'name': 'Удаление отзывов'},
         {'url_name': 'admin', 'name': 'Удаление коментариев'},
@@ -610,6 +616,7 @@ def get_menu_context():
 @front
 def admin_start(request: WSGIRequest):
     context = {
+        'pagename': "Admin Panel",
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
@@ -620,6 +627,7 @@ def admin_start(request: WSGIRequest):
 @front
 def admin_photo_upload(request: WSGIRequest):
     context = {
+        'pagename': "Admin Panel",
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
@@ -658,12 +666,15 @@ def admin_photo_upload(request: WSGIRequest):
     return render(request, "pages/upoad_photo.html", context)
 
 
+# starts product
 @front
 def admin_product_create(request: WSGIRequest):
     context = {
+        'pagename': "Admin Panel",
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
+        "expected_type": "изделия",
     }
     if request.method == "POST":
         form = ProductCreateForm(request.POST)
@@ -676,26 +687,34 @@ def admin_product_create(request: WSGIRequest):
     else:
         form = ProductCreateForm()
         context['form'] = form
-    return render(request, "pages/create_product.html", context)
+    return render(request, "pages/create_smt.html", context)
 
 
 @front
 def admin_product_view_all(request: WSGIRequest, action_type: str):
-    context = {'menu': get_menu_context(),
-               'username': request.GET.get("u"),
-               'password': request.GET.get("p"),
-               "data": list(ProductType.objects.all()),
-               "action_type": action_type,
-               }
-    return render(request, "pages/view_products.html", context)
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(ProductType.objects.all()),
+        "action_type": action_type,
+        "expected_type": "изделий",
+        "url_edit": "product_edit",
+        "url_delete": "product_delete",
+    }
+    return render(request, "pages/view_smt.html", context)
 
 
 @front
 def admin_product_edit(request: WSGIRequest, type_id: int):
-    context = {'menu': get_menu_context(),
-               'username': request.GET.get("u"),
-               'password': request.GET.get("p"),
-               }
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "изделия",
+    }
     cur_product = ProductType.objects.get(id=type_id)
     if request.method == "POST":
         form = ProductEditForm(request.POST, instance=cur_product)
@@ -707,23 +726,295 @@ def admin_product_edit(request: WSGIRequest, type_id: int):
     else:
         form = ProductEditForm(instance=cur_product)
         context['form'] = form
-    return render(request, "pages/edit_product.html", context)
+    return render(request, "pages/edit_smt.html", context)
 
 
 @front
 def admin_product_delete(request: WSGIRequest, type_id: int):
-    context = {'menu': get_menu_context(),
-               'username': request.GET.get("u"),
-               'password': request.GET.get("p"),
-               }
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
     product_type: ProductType = ProductType.objects.get(id=type_id)
-    for i in product_type.photo_set.all():
-        i: Photo
-        i.delete()
+    for photo in product_type.photo_set.all():
+        photo: Photo
+        os.remove(BASE_DIR / f"main/static/images/{photo.photo_before}")
+        os.remove(BASE_DIR / f"main/static/images/{photo.photo_after}")
+        photo.delete()
     product_type.delete()
     return redirect(f"/admin/product/view/delete/?u={context['username']}&p={context['password']}")
 
 
-def admin_error(request: WSGIRequest, exception):
+# ends product
+
+@front
+def admin_image_view_all(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(Photo.objects.all()),
+    }
+    return render(request, "pages/view_photo.html", context)
+
+
+@front
+def admin_image_delete(request: WSGIRequest, photo_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    photo = Photo.objects.get(id=photo_id)
+    os.remove(BASE_DIR / f"main/static/images/{photo.photo_before}")
+    os.remove(BASE_DIR / f"main/static/images/{photo.photo_after}")
+    photo.delete()
+    return redirect(f"/admin/photo/view?u={context['username']}&p={context['password']}")
+
+
+# start material
+@front
+def admin_stuff_create(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "материала",
+    }
+    if request.method == "POST":
+        form = StuffCreateForm(request.POST)
+        if form.is_valid():
+            product = StuffType(type=form.cleaned_data['name'])
+            product.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        else:
+            context['errors'] = form.errors
+    else:
+        form = StuffCreateForm()
+        context['form'] = form
+    return render(request, "pages/create_smt.html", context)
+
+
+@front
+def admin_stuff_view_all(request: WSGIRequest, action_type: str):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(StuffType.objects.all()),
+        "action_type": action_type,
+        "expected_type": "материала",
+        "url_edit": "stuff_edit",
+        "url_delete": "stuff_delete",
+    }
+    return render(request, "pages/view_smt.html", context)
+
+
+@front
+def admin_stuff_edit(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "материала",
+    }
+    cur_product = StuffType.objects.get(id=type_id)
+    if request.method == "POST":
+        form = StuffEditForm(request.POST, instance=cur_product)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/admin/stuff/view/edit/?u={context['username']}&p={context['password']}")
+        else:
+            context['errors'] = form.errors
+    else:
+        form = StuffEditForm(instance=cur_product)
+        context['form'] = form
+    return render(request, "pages/edit_smt.html", context)
+
+
+@front
+def admin_stuff_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    stuff_type: StuffType = StuffType.objects.get(id=type_id)
+    for photo in stuff_type.photo_set.all():
+        photo: Photo
+        os.remove(BASE_DIR / f"main/static/images/{photo.photo_before}")
+        os.remove(BASE_DIR / f"main/static/images/{photo.photo_after}")
+        photo.delete()
+    stuff_type.delete()
+    return redirect(f"/admin/stuff/view/delete/?u={context['username']}&p={context['password']}")
+
+
+# ends material
+
+# starts dirt
+@front
+def admin_dirt_create(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "загрязненности",
+    }
+    if request.method == "POST":
+        form = DirtCreateForm(request.POST)
+        if form.is_valid():
+            product = DirtType(type=form.cleaned_data['name'])
+            product.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = DirtCreateForm()
+        context['form'] = form
+    return render(request, "pages/create_smt.html", context)
+
+
+@front
+def admin_dirt_view_all(request: WSGIRequest, action_type: str):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(DirtType.objects.all()),
+        "action_type": action_type,
+        "expected_type": "загрязненности",
+        "url_edit": "dirt_edit",
+        "url_delete": "dirt_delete",
+    }
+    return render(request, "pages/view_smt.html", context)
+
+
+@front
+def admin_dirt_edit(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "загрязненности",
+    }
+    cur_product = DirtType.objects.get(id=type_id)
+    if request.method == "POST":
+        form = DirtEditForm(request.POST, instance=cur_product)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/admin/dirt/view/edit/?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = DirtEditForm(instance=cur_product)
+        context['form'] = form
+    return render(request, "pages/edit_smt.html", context)
+
+
+@front
+def admin_dirt_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    dirt_type: DirtType = DirtType.objects.get(id=type_id)
+    for photo in dirt_type.photo_set.all():
+        photo: Photo
+        os.remove(BASE_DIR / f"main/static/images/{photo.photo_before}")
+        os.remove(BASE_DIR / f"main/static/images/{photo.photo_after}")
+        photo.delete()
+    dirt_type.delete()
+    return redirect(f"/admin/dirt/view/delete/?u={context['username']}&p={context['password']}")
+
+
+# ends dirt
+
+# starts time
+@front
+def admin_time_create(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "срочности",
+    }
+    if request.method == "POST":
+        form = TimeCreateForm(request.POST)
+        if form.is_valid():
+            product = TimeType(type=form.cleaned_data['name'])
+            product.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = TimeCreateForm()
+        context['form'] = form
+    return render(request, "pages/create_smt.html", context)
+
+
+@front
+def admin_time_view_all(request: WSGIRequest, action_type: str):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(TimeType.objects.all()),
+        "action_type": action_type,
+        "expected_type": "срочности",
+        "url_edit": "time_edit",
+        "url_delete": "time_delete",
+    }
+    return render(request, "pages/view_smt.html", context)
+
+
+@front
+def admin_time_edit(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "срочности",
+    }
+    cur_product = TimeType.objects.get(id=type_id)
+    if request.method == "POST":
+        form = TimeEditForm(request.POST, instance=cur_product)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/admin/time/view/edit/?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = TimeEditForm(instance=cur_product)
+        context['form'] = form
+    return render(request, "pages/edit_smt.html", context)
+
+
+@front
+def admin_time_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    time_type: TimeType = TimeType.objects.get(id=type_id)
+    time_type.delete()
+    return redirect(f"/admin/time/view/delete/?u={context['username']}&p={context['password']}")
+# ends time
+
+
+def admin_error(request: WSGIRequest, exception=None):
     context = {'menu': get_menu_context()}
     return render(request, 'base/does_not_found.html', context=context, status=404)

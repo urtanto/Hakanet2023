@@ -59,6 +59,39 @@ def get_names_of_articles(x: Article) -> list:
 
 
 @api_view(["GET"])
+def start_page(request: WSGIRequest) -> Response:
+    return Response("Hello")
+
+
+@api_view(["POST"])
+def signup(request: WSGIRequest) -> Response:
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = get_user_model().objects.get(username=request.data["username"])
+        user.set_password(request.data["password"])
+        user.save()
+        token = Token.objects.create(user=user)
+        return Response({"token": token.key})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def login(request) -> Response:
+    user = get_object_or_404(get_user_model(), username=request.data["username"])
+    if not user.check_password(request.data["password"]):
+        return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({"token": token.key})
+
+
+@need_login(["POST"])
+def logout(request):
+    Token.objects.get(user=request.user).delete()
+    return Response("successful")
+
+
+@api_view(["GET"])
 def get_main_page(request: WSGIRequest) -> Response:
     context = {"services": [
         {
@@ -201,42 +234,9 @@ def make_article(request: WSGIRequest) -> Response:
     return Response("ok")
 
 
-@api_view(["POST"])
-def signup(request: WSGIRequest) -> Response:
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = get_user_model().objects.get(username=request.data["username"])
-        user.set_password(request.data["password"])
-        user.save()
-        token = Token.objects.create(user=user)
-        return Response({"token": token.key})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(["GET"])
-def start_page(request: WSGIRequest) -> Response:
-    return Response("start")
-
-
-@api_view(["POST"])
-def login(request) -> Response:
-    user = get_object_or_404(get_user_model(), username=request.data["username"])
-    if not user.check_password(request.data["password"]):
-        return Response({"detail": "Bad password"}, status=status.HTTP_400_BAD_REQUEST)
-    token, _ = Token.objects.get_or_create(user=user)
-    return Response({"token": token.key})
-
-
 @need_login(["GET"])
 def test(request: WSGIRequest) -> Response:
     return Response(f"passed for {request.user.username}")
-
-
-@need_login(["POST"])
-def logout(request):
-    Token.objects.get(user=request.user).delete()
-    return Response("successful")
 
 
 @need_login(["GET"])

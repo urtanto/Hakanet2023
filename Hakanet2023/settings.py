@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = env("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su",
                  "api.stylelifeweb.su",
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'bootstrap5',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -68,8 +69,8 @@ ROOT_URLCONF = 'Hakanet2023.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        # 'DIRS': [BASE_DIR / 'main/templates'],
+        # 'DIRS': [],
+        'DIRS': [BASE_DIR / 'main/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,7 +142,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'main/static/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/images/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -158,7 +160,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS)) + \
                        list(map(lambda x: f"http://{x}", ALLOWED_HOSTS))
-CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
 CORS_ALLOW_HEADERS = [
     "x-xsrf-token",

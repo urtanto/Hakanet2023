@@ -51,7 +51,9 @@ ignore=venv,
        .gitlab,
        manage.py,
        docs,
-       tests
+       tests,
+       serializers.py,
+       apps.py
 
 django-settings-module=Hakanet2023.settings
 

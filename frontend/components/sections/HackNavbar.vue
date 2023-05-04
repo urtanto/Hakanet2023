@@ -45,6 +45,10 @@ const pages = [
     title: ref("О нас"),
     slug: ref("/about"),
   },
+  {
+    title: ref("Галлерея"),
+    slug: ref("/gallery"),
+  }
 ]
 console.log(pages)
 </script>

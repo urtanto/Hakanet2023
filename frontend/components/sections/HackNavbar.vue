@@ -1,12 +1,10 @@
 <template>
   <nav class="bg-accent fixed w-full z-20 top-0 left-0">
     <div
-      class="max-w-screen-xl relative flex flex-col sm:flex-row gap-y-3 items-center justify-center sm:justify-between mx-auto p-4">
-      <div class="flex justify-between w-40">
-        <a href="/" class="flex absolute top-4 items-center">
-          <logo class="h-40" alt="Shoe Way Logo" />
-        </a>
-      </div>
+      class="max-w-screen-xl relative flex ap-y-3 items-center justify-between mx-auto p-4">
+        <nuxt-link to="/" class="flex h-10 text-default">
+          <logo class="h-full" />
+        </nuxt-link>
       <div class="flex justify-end md:order-2 w-full md:w-auto">
         <div class="flex gap-1">
           <hack-button typeBtn="solid" data-modal-toggle="registerModal">Регистрация</hack-button>
@@ -35,7 +33,7 @@
   </nav>
 </template>
 <script lang="ts" setup>
-import logo from "~/assets/images/logo.svg"
+import logo from "~/assets/images/smallLogo.svg"
 const pages = [
   {
     title: ref("Главная"),
@@ -50,6 +48,5 @@ const pages = [
     slug: ref("/gallery"),
   }
 ]
-console.log(pages)
 </script>
 <style scoped></style>

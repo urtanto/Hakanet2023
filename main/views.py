@@ -23,6 +23,10 @@ from main.models import User, Photo, Article, StuffType, TimeType, DirtType, Com
 
 
 def get_product_type_choices():
+    """
+    Getting all types of product
+    :return:
+    """
     obj = ProductType.objects.all()
     data = []
     for i in range(len(obj)):

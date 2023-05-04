@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -93,8 +95,16 @@ class Order(models.Model):
     """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     service = models.ForeignKey(Service, models.CASCADE)
+    extra_services = models.TextField(default="")  # Needs parse json
     status = models.IntegerField()
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     level_of_dirt = models.ForeignKey(DirtLevel, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)
+    taken = models.BooleanField(default=False)
+
+    def set_extra_services(self, x):
+        self.extra_services = json.dumps(x)
+
+    def get_extra_services(self):
+        return json.loads(self.extra_services)

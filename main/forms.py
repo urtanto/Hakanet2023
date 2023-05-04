@@ -2,7 +2,7 @@ from django import forms
 from django.forms import FileInput, TextInput
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
-from main.models import TimeType, DirtType, StuffType, ProductType
+from main.models import TimeType, DirtType, StuffType, ProductType, Article
 
 
 class PhotoUploadForm(forms.Form):
@@ -72,3 +72,17 @@ class TimeEditForm(forms.ModelForm):
     class Meta:
         model = TimeType
         fields = ['type']
+
+
+class ArticleCreateForm(forms.Form):
+    name = forms.CharField(label="Название статьи",
+                           max_length=255,
+                           widget=TextInput(attrs={"class": "form-control"}))
+    text = forms.CharField(label="Статья",
+                           widget=forms.Textarea())
+
+
+class ArticleEditForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['name', 'text']

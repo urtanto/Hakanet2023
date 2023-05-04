@@ -17,7 +17,7 @@
         <div class="flex items-center">
           <svg
             fill="currentColor"
-            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            class="w-5 h-5"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -40,7 +40,7 @@
         <div class="flex items-center">
           <svg
             aria-hidden="true"
-            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            class="w-5 h-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@
           <svg
             fill="currentColor"
             viewBox="0 0 20 20"
-            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            class="w-5 h-5"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
@@ -76,32 +76,13 @@
           <span class="ml-2">Пароль</span>
         </div>
       </hack-input>
-      <div class="flex items-center">
-        <input
-          v-model="formData.accepted.value"
-          id="checkbox-1"
-          name="accepted"
-          type="checkbox"
-          value="accepted"
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-        />
-        <label
-          for="checkbox-1"
-          class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >Я согласен с
-          <nuxt-link
-            to="#"
-            class="text-blue-600 hover:underline dark:text-blue-500"
-            >правилами пользования Сайта</nuxt-link
-          >.</label
-        >
-      </div>
-      <button
+      <hack-button
         type="submit"
-        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        typeBtn="solid"
+        class="!bg-accent-400 !border-accent-400 hover:!bg-accent-500 hover:!border-accent-500 !text-default"
       >
         Зарегистроваться
-      </button>
+      </hack-button>
     </form>
   </hack-modal>
 </template>
@@ -112,7 +93,6 @@ interface FormDataType extends Object {
   email: Ref<String>
   username: Ref<String>
   password: Ref<String>
-  accepted: Ref<Boolean>
   visiblePass: Ref<Boolean>
 }
 
@@ -125,7 +105,6 @@ const formData: FormDataType = {
   email: ref(""),
   username: ref(""),
   password: ref(""),
-  accepted: ref(true),
   visiblePass: ref(false),
 }
 
@@ -145,15 +124,6 @@ function serialize(data: FormDataType) {
         if (/\S+@\S+\.\S+/.test(el) === false) {
           let error: ErrorField = {
             msg: "Напишите действительный email!",
-            fieldName: field,
-          }
-          errors.push(error)
-        }
-      }
-      if (field === "accepted") {
-        if (el === false) {
-          let error: ErrorField = {
-            msg: "Требуется согласие с правилами пользования Сайта",
             fieldName: field,
           }
           errors.push(error)

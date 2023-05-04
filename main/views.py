@@ -103,10 +103,10 @@ def get_services(request: WSGIRequest) -> Response:
 @api_view(["GET"])
 def get_services(request: WSGIRequest) -> Response:
     context = {"services": {
-            "name": "first",
-            "cost": 2050.20,
-            "description": "da " * 100
-        }
+        "name": "first",
+        "cost": 2050.20,
+        "description": "da " * 100
+    }
     }
     return Response(context)
 
@@ -210,6 +210,11 @@ def signup(request: WSGIRequest) -> Response:
         token = Token.objects.create(user=user)
         return Response({"token": token.key})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def start_page(request: WSGIRequest) -> Response:
+    return Response("start")
 
 
 @api_view(["POST"])

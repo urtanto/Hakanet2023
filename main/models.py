@@ -103,8 +103,16 @@ class Order(models.Model):
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)
     taken = models.BooleanField(default=False)
 
-    def set_extra_services(self, x):
+    def set_extra_services(self, x: [dict, list]):
+        """
+        export data to db
+        :param x: data like dict or list
+        """
         self.extra_services = json.dumps(x)
 
     def get_extra_services(self):
+        """
+        import data from db
+        :return: data like dict or list
+        """
         return json.loads(self.extra_services)

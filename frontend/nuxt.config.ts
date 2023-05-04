@@ -8,8 +8,14 @@ export default defineNuxtConfig({
         host: "0.0.0.0",
       },
     },
-  },
-  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge"],
+  }, 
+  components: [
+    {
+      path: '~/components', // will get any components nested in let's say /components/test too
+      pathPrefix: false,
+    },
+  ],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge"],
   runtimeConfig: {
     trailingSlash: true,
     indexable: false,

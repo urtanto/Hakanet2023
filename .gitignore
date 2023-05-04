@@ -8,5 +8,8 @@ node_modules
 .output
 .env
 dist
+mydb.sqlite3
+test.py
+main/static/images
 
 __pycache__

@@ -50,7 +50,10 @@ ignore=venv,
        .git,
        .gitlab,
        manage.py,
-       docs
+       docs,
+       tests,
+       serializers.py,
+       apps.py
 
 django-settings-module=Hakanet2023.settings
 
@@ -437,7 +440,8 @@ disable=raw-checker-failed,
         C0114,
         C0103,
         W0611,
-        W0613
+        W0613,
+        R1732
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

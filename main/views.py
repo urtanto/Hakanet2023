@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from Hakanet2023.serializers import UserSerializer
 
-from main.models import User, Photo, Article
+from main.models import User, Photo, Article, StuffType, TimeType, DirtType, ProductType
 
 
 def need_login(method: list):
@@ -274,3 +274,164 @@ def photo_upload(request: WSGIRequest) -> Response:
         type_of_time="",
     )
     return Response("saved")
+
+
+# тут админка get
+def get_all_stuff_types(request: WSGIRequest) -> Response:
+    all_objective = StuffType.objects.all()
+
+    all_ = list(map(lambda x: x.type, all_objective))
+
+    context = {
+        "stuff": all_
+    }
+
+    return Response(context)
+
+
+# тут админка post
+def delete_stuff_type(request: WSGIRequest) -> Response:
+    deleted = request.POST["type"]
+
+    type = StuffType.objects.filter(type=deleted)[0]
+
+    type.delete()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка post
+def change_stuff_type(request: WSGIRequest) -> Response:
+    before = request.POST["before"]
+    after = request.POST["after"]
+
+    type = StuffType.objects.filter(type=before)[0]
+
+    type.type = after
+
+    type.save()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка get
+def get_all_product_types(request: WSGIRequest) -> Response:
+    all_objective = ProductType.objects.all()
+
+    all_ = list(map(lambda x: x.type, all_objective))
+
+    context = {
+        "product": all_
+    }
+
+    return Response(context)
+
+
+# тут админка post
+def delete_product_type(request: WSGIRequest) -> Response:
+    deleted = request.POST["type"]
+
+    type = ProductType.objects.filter(type=deleted)[0]
+
+    type.delete()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка post
+def change_product_type(request: WSGIRequest) -> Response:
+    before = request.POST["before"]
+    after = request.POST["after"]
+
+    type = ProductType.objects.filter(type=before)[0]
+
+    type.type = after
+
+    type.save()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка get
+def get_all_time_types(request: WSGIRequest) -> Response:
+    all_objective = TimeType.objects.all()
+
+    all_ = list(map(lambda x: x.type, all_objective))
+
+    context = {
+        "time": all_
+    }
+
+    return Response(context)
+
+
+# тут админка post
+def delete_time_type(request: WSGIRequest) -> Response:
+    deleted = request.POST["type"]
+
+    type = TimeType.objects.filter(type=deleted)[0]
+
+    type.delete()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка post
+def change_time_type(request: WSGIRequest) -> Response:
+    before = request.POST["before"]
+    after = request.POST["after"]
+
+    type = TimeType.objects.filter(type=before)[0]
+
+    type.type = after
+
+    type.save()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка get
+def get_all_dirt_types(request: WSGIRequest) -> Response:
+    all_objective = DirtType.objects.all()
+
+    all_ = list(map(lambda x: x.type, all_objective))
+
+    context = {
+        "dirt": all_
+    }
+
+    return Response(context)
+
+
+# тут админка post
+def delete_dirt_type(request: WSGIRequest) -> Response:
+    deleted = request.POST["type"]
+
+    type = DirtType.objects.filter(type=deleted)[0]
+
+    type.delete()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка post
+def change_dirt_type(request: WSGIRequest) -> Response:
+    before = request.POST["before"]
+    after = request.POST["after"]
+
+    type = DirtType.objects.filter(type=before)[0]
+
+    type.type = after
+
+    type.save()
+
+    return Response({"ans": "ok"})
+
+
+def make_new_service(request: WSGIRequest) -> Response:
+    type_of_product = request.POST["product"]
+    type_of_stuff = request.POST["stuff"]
+    type_of_time = request.POST["time"]
+    level_of_dirt = request.POST["dirt"]
+
+    return Response({"ans": "ok"})

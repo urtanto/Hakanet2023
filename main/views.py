@@ -47,6 +47,10 @@ def get_stuff_type_choices():
 
 
 def get_dirt_type_choices():
+    """
+    Getting all types of dirt
+    :return: tuple of (id, name)
+    """
     obj = DirtType.objects.all()
     data = []
     for i in range(len(obj)):

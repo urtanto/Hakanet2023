@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pt-24">
     <p class="text-accent-400 text-2xl font-bold">Наша история</p>
     <div class="text-sm mt-1 mx-2">
       <p>

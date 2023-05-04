@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -37,12 +36,12 @@ class TimeType(models.Model):
 class Service(models.Model):
     description = models.TextField()
     cost = models.FloatField()
-    name = models.TextField()
+    name = models.TextField(default="")
 
 
 class Photo(models.Model):
-    photo_before = models.ImageField(default="default.png")
-    photo_after = models.ImageField(default="default.png")
+    photo_before = models.TextField()
+    photo_after = models.TextField()
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
     type_of_time = models.ForeignKey(TimeType, models.CASCADE)
@@ -51,6 +50,7 @@ class Photo(models.Model):
 
 class Article(models.Model):
     user = models.ForeignKey(get_user_model(), models.CASCADE)
+    name = models.TextField(default="")
     text = models.TextField()
 
 

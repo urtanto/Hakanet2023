@@ -8,6 +8,6 @@
     <main class="max-w-5xl mx-auto my-1">
       <slot />
     </main>
-    <hack-footer class="mt-auto" />
+    <!-- <hack-footer class="mt-auto" /> -->
   </div>
 </template>

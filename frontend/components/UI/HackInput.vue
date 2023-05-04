@@ -7,12 +7,12 @@
         :id="idInput"
         :value="modelValue"
         @input="updateInput"
-        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        class="block py-2.5 px-0 w-full text-sm text-default bg-transparent border-0 border-b-2 border-default-dark appearance-none focus:outline-none focus:ring-0 focus:border-accent-500 peer"
         placeholder=" "
       />
       <label
         :for="idInput"
-        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        class="peer-focus:font-medium absolute text-sm text-default duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
       >
         <slot />
       </label>
@@ -20,7 +20,7 @@
         type="button"
         v-if="typeInput === 'password'"
         @click="$emit('changeMode', idInput)"
-        class="text-gray-500 border border-gray-500 transition-all duration-150 hover:text-blue-500 hover:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-gray-500 dark:text-gray-500 dark:hover:text-blue-500 dark:hover:ring-gray-800"
+        class="text-default-dark border border-default-dark transition-all duration-150 hover:text-accent-500 hover:!border-accent-500 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center"
       >
         <svg
           v-if="!visible"
@@ -59,36 +59,33 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  props: {
-    idInput: {
-      type: String,
-      required: true,
-    },
-    nameInput: {
-      type: String,
-      required: true,
-    },
-    typeInput: {
-      type: String,
-      default: "input",
-    },
-    visible: {
-      type: Boolean,
-      default: false,
-    },
-    modelValue: {
-      type: String,
-      required: true,
-    },
+<script lang="ts" setup>
+defineProps({
+  idInput: {
+    type: String,
+    required: true,
   },
-  methods: {
-    updateInput(e: any) {
-      this.$emit("update:modelValue", e?.target.value)
-    },
+  nameInput: {
+    type: String,
+    required: true,
+  },
+  typeInput: {
+    type: String,
+    default: "input",
+  },
+  visible: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: String,
+    required: true,
   },
 })
+const emit = defineEmits({
+  update: null,
+})
+function updateInput(e: any) {
+  emit("update:modelValue", e?.target.value)
+}
 </script>

@@ -7,13 +7,13 @@
   >
     <div class="relative w-full max-w-2xl max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <div class="relative bg-accent-800 rounded-lg shadow">
         <!-- Modal header -->
-        <div class="flex items-start justify-center p-4 border-b rounded-t dark:border-gray-600">
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ nameModal }}</h3>
+        <div class="flex items-start justify-center p-4 border-b rounded-t">
+          <h3 class="text-xl font-semibold text-default">{{ nameModal }}</h3>
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="text-default bg-transparent hover:bg-accent hover:text-default rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             :data-modal-hide="idModal"
           >
             <svg

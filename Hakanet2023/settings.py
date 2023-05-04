@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import environ
 import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +31,11 @@ SECRET_KEY = env("SECRET_KEY")
 # DEBUG = True
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su", "api.stylelifeweb.su", "127.0.0.1"]
+ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su",
+                 "api.stylelifeweb.su",
+                 "127.0.0.1",
+                 "testserver",
+                 "localhost"]
 
 # Application definition
 
@@ -43,18 +47,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Hakanet2023.urls'
@@ -139,17 +145,23 @@ STATIC_URL = 'main/static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'main/static'),
+]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'main/static/images/')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'main.User'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS)) + \
+                       list(map(lambda x: f"http://{x}", ALLOWED_HOSTS))
+CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ]
-}
+CORS_ALLOW_HEADERS = [
+    "x-xsrf-token",
+    "Content-Type",
+    "Authorization"
+]

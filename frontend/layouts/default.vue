@@ -8,7 +8,8 @@
     <main class="w-[1024px] mx-auto my-1">
       <slot />
     </main>
-    <div id="aftermain"></div>
-    <!-- <hack-footer class="mt-auto" /> -->
+    <footer>
+      <hack-contacts />>
+    </footer>
   </div>
 </template>

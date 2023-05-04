@@ -299,6 +299,8 @@ def get_admin(request: WSGIRequest) -> Response:
 
 
 # тут админка get
+@need_admin
+@need_login(["GET"])
 def get_all_stuff_types(request: WSGIRequest) -> Response:
     all_objective = StuffType.objects.all()
 
@@ -312,6 +314,8 @@ def get_all_stuff_types(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def delete_stuff_type(request: WSGIRequest) -> Response:
     deleted = request.POST["type"]
 
@@ -323,6 +327,8 @@ def delete_stuff_type(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["GET", "POST"])
 def change_stuff_type(request: WSGIRequest) -> Response:
     before = request.POST["before"]
     after = request.POST["after"]
@@ -337,6 +343,8 @@ def change_stuff_type(request: WSGIRequest) -> Response:
 
 
 # тут админка get
+@need_admin
+@need_login(["GET"])
 def get_all_product_types(request: WSGIRequest) -> Response:
     all_objective = ProductType.objects.all()
 
@@ -350,6 +358,8 @@ def get_all_product_types(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def delete_product_type(request: WSGIRequest) -> Response:
     deleted = request.POST["type"]
 
@@ -361,6 +371,8 @@ def delete_product_type(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def change_product_type(request: WSGIRequest) -> Response:
     before = request.POST["before"]
     after = request.POST["after"]
@@ -375,6 +387,8 @@ def change_product_type(request: WSGIRequest) -> Response:
 
 
 # тут админка get
+@need_admin
+@need_login(["GET"])
 def get_all_time_types(request: WSGIRequest) -> Response:
     all_objective = TimeType.objects.all()
 
@@ -388,6 +402,8 @@ def get_all_time_types(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def delete_time_type(request: WSGIRequest) -> Response:
     deleted = request.POST["type"]
 
@@ -399,6 +415,8 @@ def delete_time_type(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def change_time_type(request: WSGIRequest) -> Response:
     before = request.POST["before"]
     after = request.POST["after"]
@@ -413,6 +431,8 @@ def change_time_type(request: WSGIRequest) -> Response:
 
 
 # тут админка get
+@need_admin
+@need_login(["GET"])
 def get_all_dirt_types(request: WSGIRequest) -> Response:
     all_objective = DirtType.objects.all()
 
@@ -426,6 +446,8 @@ def get_all_dirt_types(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def delete_dirt_type(request: WSGIRequest) -> Response:
     deleted = request.POST["type"]
 
@@ -437,6 +459,8 @@ def delete_dirt_type(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def change_dirt_type(request: WSGIRequest) -> Response:
     before = request.POST["before"]
     after = request.POST["after"]
@@ -451,6 +475,8 @@ def change_dirt_type(request: WSGIRequest) -> Response:
 
 
 # тут админка post
+@need_admin
+@need_login(["POST"])
 def delete_comment_for_article(request: WSGIRequest) -> Response:
     id_ = request.POST["id"]
 
@@ -462,6 +488,7 @@ def delete_comment_for_article(request: WSGIRequest) -> Response:
 
 
 # тут юзер post
+@need_login(["POST"])
 def make_comment_for_article(request: WSGIRequest) -> Response:
     user = request.user
     text = request.POST["text"]
@@ -474,6 +501,7 @@ def make_comment_for_article(request: WSGIRequest) -> Response:
 
 
 # тут юзер post
+@need_login(["POST"])
 def make_review(request: WSGIRequest) -> Response:
     user = request.user
     text = request.POST["text"]

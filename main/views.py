@@ -1,4 +1,8 @@
+import json
+import os
+
 from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
@@ -11,6 +15,7 @@ from django.shortcuts import get_object_or_404
 from Hakanet2023.serializers import UserSerializer
 
 from main.models import User, Photo, Article
+from Hakanet2023.settings import BASE_DIR
 
 
 def need_login(method: list):
@@ -30,6 +35,17 @@ def need_login(method: list):
         return wrapped
 
     return need_login_decorator
+
+
+def need_admin(func):
+    def wrapped(*args, **kwargs):
+        request: WSGIRequest = args[0]
+        res = get_admin(request)
+        if not res.data["ans"]:
+            return JsonResponse({"detail": "you are not admin"}, status=status.HTTP_403_FORBIDDEN)
+        return func(*args, **kwargs)
+
+    return wrapped
 
 
 def get_token(request: WSGIRequest) -> str:
@@ -96,11 +112,13 @@ def logout(request):
 def get_main_page(request: WSGIRequest) -> Response:
     context = {"services": [
         {
+            "service_id": 1,
             "name": "first",
             "cost": 2050.20,
             "description": "da " * 100
         },
         {
+            "service_id": 2,
             "name": "second",
             "cost": 4450.55,
             "description": "net " * 100
@@ -234,6 +252,7 @@ def make_article(request: WSGIRequest) -> Response:
     return Response("ok")
 
 
+@need_admin
 @need_login(["GET"])
 def test(request: WSGIRequest) -> Response:
     return Response(f"passed for {request.user.username}")
@@ -259,8 +278,10 @@ def get_user(request):
 def image_upload(request: WSGIRequest) -> Response:
     file = request.FILES['file']
     fs = FileSystemStorage()
-    fs.save(file.name, file.file)
-    return Response({"filename": file.name})
+    print(BASE_DIR)
+    filename = f"{file.name}_{len(os.listdir(BASE_DIR))}"
+    fs.save(filename, file.file)
+    return Response({"filename": filename})
 
 
 @need_login(["POST"])
@@ -274,3 +295,8 @@ def photo_upload(request: WSGIRequest) -> Response:
         type_of_time="",
     )
     return Response("saved")
+
+
+@need_login(["GET", "POST"])
+def get_admin(request: WSGIRequest) -> Response:
+    return Response({"ans": request.user.super_user})

@@ -159,7 +159,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS)) + \
                        list(map(lambda x: f"http://{x}", ALLOWED_HOSTS))
-CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
 CORS_ALLOW_HEADERS = [
     "x-xsrf-token",

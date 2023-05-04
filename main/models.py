@@ -18,28 +18,46 @@ class ReviewForCompany(models.Model):
 
 
 class DirtLevel(models.Model):
+    """
+    Dirt levels
+    """
     level = models.TextField()
 
 
 class ProductType(models.Model):
+    """
+    type of product
+    """
     type = models.TextField()
 
 
 class StuffType(models.Model):
+    """
+    type of material
+    """
     type = models.TextField()
 
 
 class TimeType(models.Model):
+    """
+    Type how fast we have to do it
+    """
     type = models.TextField()
 
 
 class Service(models.Model):
+    """
+    Services of company
+    """
     description = models.TextField()
     cost = models.FloatField()
     name = models.TextField(default="")
 
 
 class Photo(models.Model):
+    """
+    Object for carousel with before/after
+    """
     photo_before = models.TextField()
     photo_after = models.TextField()
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
@@ -49,18 +67,27 @@ class Photo(models.Model):
 
 
 class Article(models.Model):
+    """
+    Article in the blog
+    """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     name = models.TextField(default="")
     text = models.TextField()
 
 
 class CommentForArticle(models.Model):
+    """
+    Comments for article
+    """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     article = models.ForeignKey(Article, models.CASCADE)
     text = models.TextField()
 
 
 class Order(models.Model):
+    """
+    Order to do some job
+    """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     service = models.ForeignKey(Service, models.CASCADE)
     status = models.IntegerField()

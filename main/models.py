@@ -75,7 +75,7 @@ class Article(models.Model):
     Article in the blog
     """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
-    name = models.TextField(default="")
+    name = models.CharField(max_length=255)
     text = models.TextField()
 
 

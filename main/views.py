@@ -17,7 +17,7 @@ from Hakanet2023.serializers import UserSerializer
 
 from Hakanet2023.settings import BASE_DIR
 from main.forms import PhotoUploadForm, ProductCreateForm, ProductEditForm, StuffCreateForm, StuffEditForm, \
-    DirtCreateForm, DirtEditForm, TimeCreateForm, TimeEditForm
+    DirtCreateForm, DirtEditForm, TimeCreateForm, TimeEditForm, ArticleCreateForm, ArticleEditForm
 from main.models import User, Photo, Article, StuffType, TimeType, DirtType, CommentForArticle, Order, ReviewForCompany, \
     ProductType
 
@@ -610,7 +610,7 @@ def make_comment_for_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     article_id = request.POST["id"]
 
-    new_com = CommentForArticle(user=user, text=text, article=Article.objects.get(id=article_id))
+    new_com = CommentForArticle(user=user, text=text, article=Article.objects.filter(id=article_id))
     new_com.save()
 
     return Response({"ans": "ok"})
@@ -646,7 +646,7 @@ def make_review(request: WSGIRequest) -> Response:
     user = request.user
     text = request.POST["text"]
 
-    new_com = ReviewForCompany(user=request.user, comment=text)
+    new_com = ReviewForCompany(user=user, comment=text)
     new_com.save()
 
     return Response({"ans": "ok"})
@@ -672,9 +672,9 @@ def get_menu_context():
         {'url_name': 'admin', 'name': 'Меню'},
         [
             "Статьи",
-            {'url_name': 'admin', 'name': 'Создавать'},
-            {'url_name': 'admin', 'name': 'Редактировать'},
-            {'url_name': 'admin', 'name': 'Удалить'},
+            {'url_name': 'article_create', 'name': 'Создавать'},
+            {'url_name': 'article_view_edit', 'name': 'Редактировать', "action_type": "edit"},
+            {'url_name': 'article_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
         [
             "Фото до/после",
@@ -705,7 +705,7 @@ def get_menu_context():
             {'url_name': 'time_view_edit', 'name': 'Редактировать', "action_type": "edit"},
             {'url_name': 'time_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
-        {'url_name': 'admin', 'name': 'Удаление отзывов'},
+        {'url_name': 'comments_view', 'name': 'Удаление отзывов'},
         {'url_name': 'admin', 'name': 'Удаление коментариев'},
     ]
 
@@ -771,7 +771,7 @@ def admin_product_create(request: WSGIRequest):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "изделия",
+        "expected_type": "Создание нового типа изделия",
     }
     if request.method == "POST":
         form = ProductCreateForm(request.POST)
@@ -810,7 +810,7 @@ def admin_product_edit(request: WSGIRequest, type_id: int):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "изделия",
+        "expected_type": "Изменение типа изделия",
     }
     cur_product = ProductType.objects.get(id=type_id)
     if request.method == "POST":
@@ -881,7 +881,7 @@ def admin_stuff_create(request: WSGIRequest):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "материала",
+        "expected_type": "Создание типа материала",
     }
     if request.method == "POST":
         form = StuffCreateForm(request.POST)
@@ -920,7 +920,7 @@ def admin_stuff_edit(request: WSGIRequest, type_id: int):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "материала",
+        "expected_type": "Изменение типа материала",
     }
     cur_product = StuffType.objects.get(id=type_id)
     if request.method == "POST":
@@ -964,7 +964,7 @@ def admin_dirt_create(request: WSGIRequest):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "загрязненности",
+        "expected_type": "Создание типа загрязненности",
     }
     if request.method == "POST":
         form = DirtCreateForm(request.POST)
@@ -1002,7 +1002,7 @@ def admin_dirt_edit(request: WSGIRequest, type_id: int):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "загрязненности",
+        "expected_type": "Изменение типа загрязненности",
     }
     cur_product = DirtType.objects.get(id=type_id)
     if request.method == "POST":
@@ -1045,7 +1045,7 @@ def admin_time_create(request: WSGIRequest):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "срочности",
+        "expected_type": "Создание типа срочности",
     }
     if request.method == "POST":
         form = TimeCreateForm(request.POST)
@@ -1083,7 +1083,7 @@ def admin_time_edit(request: WSGIRequest, type_id: int):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "expected_type": "срочности",
+        "expected_type": "Изменение типа срочности",
     }
     cur_product = TimeType.objects.get(id=type_id)
     if request.method == "POST":
@@ -1113,6 +1113,110 @@ def admin_time_delete(request: WSGIRequest, type_id: int):
 
 # ends time
 
+@front
+def admin_comments_view(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        'data': ReviewForCompany.objects.all(),
+    }
+    return render(request, "pages/view_review.html", context)
+
+
+@front
+def admin_comment_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    commend: ReviewForCompany = ReviewForCompany.objects.get(id=type_id)
+    commend.delete()
+    return redirect(f"/admin/comments/view/?u={context['username']}&p={context['password']}")
+
+
+# starts article
+@front
+def admin_article_create(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "Создание статьи",
+    }
+    if request.method == "POST":
+        form = ArticleCreateForm(request.POST)
+        if form.is_valid():
+            product = Article(user=User.objects.get(username=context['username']), name=form.cleaned_data['name'],
+                              text=form.cleaned_data['text'])
+            product.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = ArticleCreateForm()
+        context['form'] = form
+    return render(request, "pages/create_smt.html", context)
+
+
+@front
+def admin_article_view_all(request: WSGIRequest, action_type: str):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(Article.objects.all()),
+        "action_type": action_type,
+        "expected_type": "статьи",
+        "url_edit": "article_edit",
+        "url_delete": "article_delete",
+    }
+    return render(request, "pages/view_article.html", context)
+
+
+@front
+def admin_article_edit(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "Изменение статьи",
+    }
+    cur_product = Article.objects.get(id=type_id)
+    if request.method == "POST":
+        form = ArticleEditForm(request.POST, instance=cur_product)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/admin/article/view/edit/?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = ArticleEditForm(instance=cur_product)
+        context['form'] = form
+    return render(request, "pages/edit_smt.html", context)
+
+
+@front
+def admin_article_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    article: Article = Article.objects.get(id=type_id)
+    for comment in article.commentforarticle_set.all():
+        comment: CommentForArticle
+        comment.delete()
+    article.delete()
+    return redirect(f"/admin/article/view/delete/?u={context['username']}&p={context['password']}")
+
+
+# ends article
 
 def admin_error(request: WSGIRequest, exception=None):
     context = {'menu': get_menu_context()}

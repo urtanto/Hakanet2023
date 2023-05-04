@@ -39,6 +39,7 @@ urlpatterns = [
     re_path("^admin/stuff/create", views.admin_stuff_create, name="stuff_create"),
     re_path("^admin/dirt/create", views.admin_dirt_create, name="dirt_create"),
     re_path("^admin/time/create", views.admin_time_create, name="time_create"),
+    re_path("^review/create", views.make_review, name="review_create"),
     path("admin/product/view/<str:action_type>/", views.admin_product_view_all, name="product_view_edit"),
     path("admin/stuff/view/<str:action_type>/", views.admin_stuff_view_all, name="stuff_view_edit"),
     path("admin/dirt/view/<str:action_type>/", views.admin_dirt_view_all, name="dirt_view_edit"),
@@ -51,7 +52,9 @@ urlpatterns = [
     path("admin/stuff/delete/<str:type_id>/", views.admin_stuff_delete, name="stuff_delete"),
     path("admin/dirt/delete/<str:type_id>/", views.admin_dirt_delete, name="dirt_delete"),
     path("admin/time/delete/<str:type_id>/", views.admin_time_delete, name="time_delete"),
+    path("admin/comments/delete/<str:type_id>/", views.admin_comment_delete, name="comment_delete"),
     re_path("^admin/photo/view", views.admin_image_view_all, name="photo_view"),
+    re_path("^admin/comments/view", views.admin_comments_view, name="comments_view"),
     path("admin/photo/delete/<int:photo_id>/", views.admin_image_delete, name="photo_delete"),
     re_path("^admin", views.admin_start, name="admin"),
 ]

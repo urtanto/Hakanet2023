@@ -549,7 +549,7 @@ def make_review(request: WSGIRequest) -> Response:
     user = request.user
     text = request.POST["text"]
 
-    new_com = ReviewForCompany(user=user, text=text)
+    new_com = ReviewForCompany(user=user, comment=text)
     new_com.save()
 
     return Response({"ans": "ok"})
@@ -608,7 +608,7 @@ def get_menu_context():
             {'url_name': 'time_view_edit', 'name': 'Редактировать', "action_type": "edit"},
             {'url_name': 'time_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
-        {'url_name': 'admin', 'name': 'Удаление отзывов'},
+        {'url_name': 'comments_view', 'name': 'Удаление отзывов'},
         {'url_name': 'admin', 'name': 'Удаление коментариев'},
     ]
 
@@ -1012,7 +1012,33 @@ def admin_time_delete(request: WSGIRequest, type_id: int):
     time_type: TimeType = TimeType.objects.get(id=type_id)
     time_type.delete()
     return redirect(f"/admin/time/view/delete/?u={context['username']}&p={context['password']}")
+
+
 # ends time
+
+@front
+def admin_comments_view(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        'data': ReviewForCompany.objects.all(),
+    }
+    return render(request, "pages/view_review.html", context)
+
+
+@front
+def admin_comment_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    commend: ReviewForCompany = ReviewForCompany.objects.get(id=type_id)
+    commend.delete()
+    return redirect(f"/admin/comments/view/?u={context['username']}&p={context['password']}")
 
 
 def admin_error(request: WSGIRequest, exception=None):

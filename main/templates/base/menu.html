@@ -1,0 +1,32 @@
+{% block menu %}
+    <div class="btn-group btn-group" role="group" aria-label="Basic example">
+        {% for item in menu %}
+            {% if item|is_drop %}
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ item.0 }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        {% for drop_item in item|get_list %}
+                            {% if drop_item.action_type %}
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url drop_item.url_name action_type=drop_item.action_type %}?u={{ username }}&p={{ password }}">{{ drop_item.name }}</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url drop_item.url_name %}?u={{ username }}&p={{ password }}">{{ drop_item.name }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <a class="btn btn-primary "
+                   href="{% url item.url_name %}?u={{ username }}&p={{ password }}">{{ item.name }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

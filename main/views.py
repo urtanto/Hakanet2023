@@ -1,8 +1,9 @@
-import json
 import os
 
 from django.core.files.storage import FileSystemStorage
+from django.template.defaultfilters import register
 from django.http import JsonResponse
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
@@ -11,12 +12,37 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from Hakanet2023.serializers import UserSerializer
 
 from Hakanet2023.settings import BASE_DIR
+from main.forms import PhotoUploadForm, ProductCreateForm, ProductEditForm
 from main.models import User, Photo, Article, StuffType, TimeType, DirtType, CommentForArticle, Order, ReviewForCompany, \
     ProductType
+
+
+def get_product_type_choices():
+    obj = ProductType.objects.all()
+    data = []
+    for i in range(len(obj)):
+        data.append((obj[i].id, obj[i].type))
+    return tuple(data)
+
+
+def get_stuff_type_choices():
+    obj = StuffType.objects.all()
+    data = []
+    for i in range(len(obj)):
+        data.append((obj[i].id, obj[i].type))
+    return tuple(data)
+
+
+def get_dirt_type_choices():
+    obj = DirtType.objects.all()
+    data = []
+    for i in range(len(obj)):
+        data.append((obj[i].id, obj[i].type))
+    return tuple(data)
 
 
 def need_login(method: list):
@@ -44,6 +70,17 @@ def need_admin(func):
         res = get_admin(request)
         if not res.data["ans"]:
             return JsonResponse({"detail": "you are not admin"}, status=status.HTTP_403_FORBIDDEN)
+        return func(*args, **kwargs)
+
+    return wrapped
+
+
+def front(func):
+    def wrapped(*args, **kwargs):
+        request: WSGIRequest = args[0]
+        user = get_object_or_404(get_user_model(), username=request.GET.get("u", None))
+        if not user.check_password(request.GET.get("p")):
+            return redirect(reverse("error"))
         return func(*args, **kwargs)
 
     return wrapped
@@ -270,13 +307,17 @@ def get_user(request):
     return Response({"user": user})
 
 
+def load_image(request: WSGIRequest, name="file"):
+    file = request.FILES[name]
+    fs = FileSystemStorage()
+    filename = f"{len(os.listdir(BASE_DIR / 'main/static/images'))}_{file.name}"
+    fs.save(filename, file.file)
+    return filename
+
+
 @need_login(["POST"])
 def image_upload(request: WSGIRequest) -> Response:
-    file = request.FILES['file']
-    fs = FileSystemStorage()
-    print(BASE_DIR)
-    filename = f"{file.name}_{len(os.listdir(BASE_DIR))}"
-    fs.save(filename, file.file)
+    filename = load_image(request)
     return Response({"filename": filename})
 
 
@@ -510,3 +551,179 @@ def make_review(request: WSGIRequest) -> Response:
     new_com.save()
 
     return Response({"ans": "ok"})
+
+
+@register.filter
+def is_drop(n):
+    return isinstance(n, list)
+
+
+@register.filter
+def get_list(n):
+    return n[1:]
+
+
+def get_menu_context():
+    """
+    Функция для возвращения контекста меню
+
+    :return: контекст меню
+    """
+    return [
+        {'url_name': 'admin', 'name': 'Меню'},
+        [
+            "Статьи",
+            {'url_name': 'admin', 'name': 'Создавать'},
+            {'url_name': 'admin', 'name': 'Редактировать'},
+            {'url_name': 'admin', 'name': 'Удалить'},
+        ],
+        {'url_name': 'photo_upload', 'name': 'Загрузить фото'},
+        [
+            "Типы Изделия",
+            {'url_name': 'product_create', 'name': 'Создать'},
+            {'url_name': 'product_view_edit', 'name': 'Редактировать', "action_type": "edit"},
+            {'url_name': 'product_view_edit', 'name': 'Удалить', "action_type": "delete"},
+        ],
+        [
+            "Типы Материла",
+            {'url_name': 'admin', 'name': 'Создать'},
+            {'url_name': 'admin', 'name': 'Редактировать'},
+            {'url_name': 'admin', 'name': 'Удалить'},
+        ],
+        [
+            "Типы Загрязненности",
+            {'url_name': 'admin', 'name': 'Создавать'},
+            {'url_name': 'admin', 'name': 'Редактировать'},
+            {'url_name': 'admin', 'name': 'Удалить'},
+        ],
+        [
+            "Типы Срочности",
+            {'url_name': 'admin', 'name': 'Создать'},
+            {'url_name': 'admin', 'name': 'Редактировать'},
+            {'url_name': 'admin', 'name': 'Удалить'},
+        ],
+        {'url_name': 'admin', 'name': 'Удаление отзывов'},
+        {'url_name': 'admin', 'name': 'Удаление коментариев'},
+    ]
+
+
+@front
+def admin_start(request: WSGIRequest):
+    context = {
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    return render(request, 'pages/admin_start.html', context)
+
+
+@front
+def admin_photo_upload(request: WSGIRequest):
+    context = {
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    pdt = get_product_type_choices()
+    stt = get_stuff_type_choices()
+    drt = get_dirt_type_choices()
+    print(pdt)
+    if request.method == "POST":
+        form = PhotoUploadForm(pdt,
+                               stt,
+                               drt,
+                               request.POST, request.FILES)
+        if form.is_valid():
+            filename1 = load_image(request, name="image1")
+            filename2 = load_image(request, name="image2")
+            type_product = int(form.cleaned_data['type_product'])
+            type_stuff = int(form.cleaned_data['type_stuff'])
+            type_dirt = int(form.cleaned_data['type_dirt'])
+            photo = Photo(
+                photo_before=filename1,
+                photo_after=filename2,
+                type_of_product=ProductType.objects.get(id=type_product),
+                type_of_dirt=DirtType.objects.get(id=type_dirt),
+                type_of_stuff=StuffType.objects.get(id=type_stuff),
+            )
+            photo.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        else:
+            context['errors'] = form.errors
+    else:
+        form = PhotoUploadForm(pdt,
+                               stt,
+                               drt)
+        context['form'] = form
+    return render(request, "pages/upoad_photo.html", context)
+
+
+@front
+def admin_product_create(request: WSGIRequest):
+    context = {
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    if request.method == "POST":
+        form = ProductCreateForm(request.POST)
+        if form.is_valid():
+            product = ProductType(type=form.cleaned_data['name'])
+            product.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        else:
+            context['errors'] = form.errors
+    else:
+        form = ProductCreateForm()
+        context['form'] = form
+    return render(request, "pages/create_product.html", context)
+
+
+@front
+def admin_product_view_all(request: WSGIRequest, action_type: str):
+    context = {'menu': get_menu_context(),
+               'username': request.GET.get("u"),
+               'password': request.GET.get("p"),
+               "data": list(ProductType.objects.all()),
+               "action_type": action_type,
+               }
+    return render(request, "pages/view_products.html", context)
+
+
+@front
+def admin_product_edit(request: WSGIRequest, type_id: int):
+    context = {'menu': get_menu_context(),
+               'username': request.GET.get("u"),
+               'password': request.GET.get("p"),
+               }
+    cur_product = ProductType.objects.get(id=type_id)
+    if request.method == "POST":
+        form = ProductEditForm(request.POST, instance=cur_product)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/admin/product/view/edit/?u={context['username']}&p={context['password']}")
+        else:
+            context['errors'] = form.errors
+    else:
+        form = ProductEditForm(instance=cur_product)
+        context['form'] = form
+    return render(request, "pages/edit_product.html", context)
+
+
+@front
+def admin_product_delete(request: WSGIRequest, type_id: int):
+    context = {'menu': get_menu_context(),
+               'username': request.GET.get("u"),
+               'password': request.GET.get("p"),
+               }
+    product_type: ProductType = ProductType.objects.get(id=type_id)
+    for i in product_type.photo_set.all():
+        i: Photo
+        i.delete()
+    product_type.delete()
+    return redirect(f"/admin/product/view/delete/?u={context['username']}&p={context['password']}")
+
+
+def admin_error(request: WSGIRequest, exception):
+    context = {'menu': get_menu_context()}
+    return render(request, 'base/does_not_found.html', context=context, status=404)

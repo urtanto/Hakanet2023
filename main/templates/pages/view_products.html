@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/my.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div style="display: flex; flex-wrap: wrap; justify-content: left; width: 100%; gap: 2vh;">
+        {% for item in data %}
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">{{ item.type }}</li>
+                {% if action_type == "edit" %}
+                    <li class="list-group-item">
+                        <a class="btn btn-primary"
+                           href="{% url 'product_edit' type_id=item.id %}?u={{ username }}&p={{ password }}">Edit</a>
+                    </li>
+                {% else %}
+                    <li class="list-group-item">
+                        <a class="btn btn-danger"
+                           href="{% url 'product_delete' type_id=item.id %}?u={{ username }}&p={{ password }}">Delete</a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/button_name_change.js' %}"></script>
+{% endblock %}

@@ -1,27 +1,25 @@
 <template>
-  <div>
-    <h1>Home</h1>
-    <p>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit itaque excepturi atque aliquam distinctio dolore,
-      repudiandae voluptatibus officiis quo molestiae!
-    </p>
-    <p>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit itaque excepturi atque aliquam distinctio dolore,
-      repudiandae voluptatibus officiis quo molestiae!
-    </p>
-  </div>
+  <hero />
+  <benefits />
+  <services />
+  <reviews />
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from "vue"
-import { initModals, initCollapses } from "flowbite"
+import hero from "~/components/sections/index/hero.vue"
+import benefits from "~/components/sections/index/benefits.vue"
+import services from "~/components/sections/index/services.vue"
+import reviews  from "~/components/sections/index/reviews.vue"
+
+import { initModals, initCollapses, initCarousels } from "flowbite"
 definePageMeta({
   title: "Home",
   description: "Home page of Nuxt Site",
 })
-
 onMounted(() => {
   initModals()
   initCollapses()
+  initCarousels()
 })
 </script>

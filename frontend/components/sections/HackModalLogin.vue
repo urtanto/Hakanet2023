@@ -104,47 +104,45 @@ function changeMode(idInput: String) {
 
 async function login(e: any) {
   e.preventDefault()
-  const authToken = await $fetch("http://localhost:8000/auth/token/login/", {
+  const authToken: Object = await $fetch("http://localhost:8000/login/", {
     method: "POST",
     mode: "cors",
     body: {
       username: formData.login.value,
-      password: formData.password.value
+      password: formData.password.value,
     },
     parseResponse: JSON.parse,
     responseType: "json",
     headers: {
-    "Content-Type": "application/json; charset=UTF-8"
+      "Content-Type": "application/json; charset=UTF-8",
     },
-    async onResponse({ request, options, response }) {
-      return response._data?.auth_token
+    async onResponse({ response }) {
+      return response._data
     },
-    async onRequestError({ request, options, error }) {
-    // Log error
-    console.log('[fetch request error]', request, error)
-    }
+    async onRequestError({ request, error }) {
+      // Log error
+      console.log("[fetch request error]", request, error)
+    },
   })
-  if (authToken) {
-    return  await $fetch("http://localhost:8000/auth/users/me", {
-    method: "POST",
-    mode: "cors",
-    body: {
-      username: formData.login.value,
-      password: formData.password.value
-    },
-    parseResponse: JSON.parse,
-    responseType: "json",
-    headers: {
-    "Content-Type": "application/json; charset=UTF-8"
-    },
-    async onResponse({ request, options, response }) {
-      return response._data?.auth_token
-    },
-    async onRequestError({ request, options, error }) {
-    // Log error
-    console.log('[fetch request error]', request, error)
-    }
-  })
+  console.log(authToken)
+  if (authToken.hasOwnProperty("token")) {
+    return await $fetch("http://localhost:8000/test/", {
+      method: "GET",
+      mode: "cors",
+      parseResponse: JSON.parse,
+      responseType: "json",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Token ${authToken.token}`,
+      },
+      async onResponse({ request, options, response }) {
+        console.log(request, response)
+      },
+      async onRequestError({ request, options, error }) {
+        // Log error
+        console.log("[fetch request error]", request, error)
+      },
+    })
   }
 }
 </script>

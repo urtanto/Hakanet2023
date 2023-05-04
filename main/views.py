@@ -49,22 +49,69 @@ def get_image_path(x: Photo) -> list:
     return [x.photo_before, x.photo_after]
 
 
-def get_names_of_articles(x: Article) -> str:
-    return x.name
+def get_names_of_articles(x: Article) -> list:
+    return [x.name, x.id]
 
 
-def start_page(request: WSGIRequest) -> Response:
-    """
-    function of starting page
-    """
-    users = list(map(get_name, User.objects.all()))
-    context = {
-        "text": "starting page",
-        "users": users,
+@api_view(["GET"])
+def get_main_page(request: WSGIRequest) -> Response:
+    context = {"services": [
+        {
+            "name": "first",
+            "cost": 2050.20,
+            "description": "da " * 100
+        },
+        {
+            "name": "second",
+            "cost": 4450.55,
+            "description": "net " * 100
+        },
+    ],
+        "comments": [
+            {
+                "user": {
+                    "username": "da",
+                    "first_name": "A.",
+                    "second_name": "B",
+                    "picture": open("static/images/default.png", "rb").read()
+                },
+                "comment": "some text" * 50
+            }
+        ]
     }
     return Response(context)
 
 
+@api_view(["GET"])
+def get_services(request: WSGIRequest) -> Response:
+    context = {"services": [
+        {
+            "name": "first",
+            "cost": 2050.20,
+            "description": "da " * 100
+        },
+        {
+            "name": "second",
+            "cost": 4450.55,
+            "description": "net " * 100
+        },
+    ]
+    }
+    return Response(context)
+
+
+@api_view(["GET"])
+def get_services(request: WSGIRequest) -> Response:
+    context = {"services": {
+            "name": "first",
+            "cost": 2050.20,
+            "description": "da " * 100
+        }
+    }
+    return Response(context)
+
+
+@api_view(["GET"])
 def photo_sort(request: WSGIRequest) -> Response:
     type_of_product = request.GET["product"]
     type_of_stuff = request.GET["stuff"]
@@ -90,6 +137,7 @@ def photo_sort(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["GET"])
 def get_all_articles(request: WSGIRequest) -> Response:
     content = list(map(get_names_of_articles, Article.objects.all()))
 
@@ -100,18 +148,23 @@ def get_all_articles(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["GET"])
 def get_one_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
-    text = Article.objects.filter(name=name)[0].text
+    article = Article.objects.filter(id=id)[0]
+    name = article.name
+    text = article.text
 
     context = {
-        "text": text
+        "text": text,
+        "name": name
     }
 
     return Response(context)
 
 
+@api_view(["GET"])
 def get_comments_for_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
@@ -131,12 +184,17 @@ def get_comments_for_article(request: WSGIRequest) -> Response:
     return Response(context)
 
 
+@api_view(["POST"])
 def make_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     name = request.POST["name"]
 
-    new_article = Article(user=1, text=text, name=name)
+    new_article = Article(text=text, name=name)
     new_article.save()
+
+    context = {
+        "ok": "ok"
+    }
 
     return Response("ok")
 
@@ -171,7 +229,7 @@ def test(request: WSGIRequest) -> Response:
 @need_login(["POST"])
 def logout(request):
     Token.objects.get(user=request.user).delete()
-    return Response("logout")
+    return Response("successful")
 
 
 @need_login(["GET"])

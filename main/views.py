@@ -15,7 +15,8 @@ from django.shortcuts import get_object_or_404
 from Hakanet2023.serializers import UserSerializer
 
 from Hakanet2023.settings import BASE_DIR
-from main.models import User, Photo, Article, StuffType, TimeType, DirtType, ProductType
+from main.models import User, Photo, Article, StuffType, TimeType, DirtType, CommentForArticle, Order, ReviewForCompany, \
+    ProductType
 
 
 def need_login(method: list):
@@ -182,14 +183,9 @@ def photo_sort(request: WSGIRequest) -> Response:
                                                 type_of_stuff=type_of_stuff)
 
     all_photos = list(map(get_image_path, all_photos_objective))
-    content = []
-    for [path1, path2] in all_photos:
-        img1 = open(path1, "rb").read()
-        img2 = open(path2, "rb").read()
-        content.append([img1, img2])
 
     context = {
-        "photos": content
+        "photos": all_photos
     }
 
     return Response(context)
@@ -233,7 +229,8 @@ def get_comments_for_article(request: WSGIRequest) -> Response:
     for i in comments_objective:
         comment_user = i.user.username
         comment_text = i.text
-        comments.append([comment_user, comment_text])
+        comment_id = i.id
+        comments.append([comment_user, comment_text, comment_id])
 
     context = {
         "comments": comments
@@ -444,19 +441,44 @@ def change_dirt_type(request: WSGIRequest) -> Response:
     before = request.POST["before"]
     after = request.POST["after"]
 
-    type = DirtType.objects.filter(type=before)[0]
+    type_ = DirtType.objects.filter(type=before)[0]
 
-    type.type = after
+    type_.type = after
 
-    type.save()
+    type_.save()
 
     return Response({"ans": "ok"})
 
 
-def make_new_service(request: WSGIRequest) -> Response:
-    type_of_product = request.POST["product"]
-    type_of_stuff = request.POST["stuff"]
-    type_of_time = request.POST["time"]
-    level_of_dirt = request.POST["dirt"]
+# тут админка post
+def delete_comment_for_article(request: WSGIRequest) -> Response:
+    id_ = request.POST["id"]
+
+    comment = DirtType.objects.filter(id=id_)[0]
+
+    comment.delete()
+
+    return Response({"ans": "ok"})
+
+
+# тут юзер post
+def make_comment_for_article(request: WSGIRequest) -> Response:
+    user = request.user
+    text = request.POST["text"]
+    article_id = request.POST["id"]
+
+    new_com = CommentForArticle(user=user, text=text, article=Article.objects.filter(id=article_id))
+    new_com.save()
+
+    return Response({"ans": "ok"})
+
+
+# тут юзер post
+def make_review(request: WSGIRequest) -> Response:
+    user = request.user
+    text = request.POST["text"]
+
+    new_com = ReviewForCompany(user=user, text=text)
+    new_com.save()
 
     return Response({"ans": "ok"})

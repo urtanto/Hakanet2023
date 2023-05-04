@@ -249,6 +249,19 @@ def make_article(request: WSGIRequest) -> Response:
     return Response("ok")
 
 
+@need_admin
+@api_view(["POST"])
+def change_article(request: WSGIRequest) -> Response:
+    id_ = request.POST["id"]
+    after = request.POST["after"]
+
+    article = Article.objects.get(id=id_)
+    article.text = after
+    article.save()
+
+    return Response("ok")
+
+
 @need_login(["GET"])
 def test(request: WSGIRequest) -> Response:
     return Response(f"passed for {request.user.username}")
@@ -498,6 +511,30 @@ def make_comment_for_article(request: WSGIRequest) -> Response:
     new_com.save()
 
     return Response({"ans": "ok"})
+
+
+# юзер get
+def get_orders(request: WSGIRequest) -> Response:
+    user = request.user
+    orders_objective = user.order_set.all()
+    orders = []
+    for i in orders_objective:
+        order = {
+            "extra_services": i.extra_services,
+            "status": i.status,
+            "type_of_product": i.type_of_product,
+            "type_of_stuff": i.type_of_stuff,
+            "level_of_dirt": i.level_of_dirt,
+            "type_of_time": i.type_of_time,
+            "taken": i.taken
+        }
+        orders.append(order)
+
+    context = {
+        "orders": orders
+    }
+
+    return Response(context)
 
 
 # тут юзер post

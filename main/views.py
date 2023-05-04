@@ -1,13 +1,13 @@
-from django.core.handlers.wsgi import WSGIRequest
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from Hakanet2023.serializers import UserSerializer
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from Hakanet2023.serializers import UserSerializer
 
 from main.models import User, Photo, Article
 
@@ -101,8 +101,9 @@ def get_services(request: WSGIRequest) -> Response:
 
 
 @api_view(["GET"])
-def get_services(request: WSGIRequest) -> Response:
+def get_service(request: WSGIRequest, service_id: int) -> Response:
     context = {"services": {
+        "service_id": service_id,
         "name": "first",
         "cost": 2050.20,
         "description": "da " * 100
@@ -150,9 +151,9 @@ def get_all_articles(request: WSGIRequest) -> Response:
 
 @api_view(["GET"])
 def get_one_article(request: WSGIRequest) -> Response:
-    name = request.GET["name"]
+    article_id = request.GET["id"]
 
-    article = Article.objects.filter(id=id)[0]
+    article = Article.objects.filter(id=article_id)[0]
     name = article.name
     text = article.text
 
@@ -168,7 +169,7 @@ def get_one_article(request: WSGIRequest) -> Response:
 def get_comments_for_article(request: WSGIRequest) -> Response:
     name = request.GET["name"]
 
-    id = Article.objects.filter(name=name)[0].id
+    # id = Article.objects.filter(name=name)[0].id
     comments_objective = Article.objects.get(name=name).commentforarticle_set.all()
 
     comments = []
@@ -191,10 +192,6 @@ def make_article(request: WSGIRequest) -> Response:
 
     new_article = Article(text=text, name=name)
     new_article.save()
-
-    context = {
-        "ok": "ok"
-    }
 
     return Response("ok")
 

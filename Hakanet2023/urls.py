@@ -26,7 +26,8 @@ urlpatterns = [
     re_path("login", views.login),
     re_path("logout", views.logout),
     re_path("get/user", views.get_user),
-    re_path("articles", views.get_all_articles),
-    re_path("main_page", views.get_main_page),
-    re_path("services", views.get_services),
+    re_path("get/articles", views.get_all_articles),
+    re_path("get/main_page", views.get_main_page),
+    re_path("get/services", views.get_services),
+    re_path("get/service/<int:service_id>", views.get_services),
 ]

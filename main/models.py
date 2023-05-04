@@ -13,6 +13,9 @@ class User(AbstractUser):
 
 
 class ReviewForCompany(models.Model):
+    """
+    Comments about company
+    """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
     comment = models.TextField()
 

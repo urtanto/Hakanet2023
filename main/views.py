@@ -355,6 +355,18 @@ def change_stuff_type(request: WSGIRequest) -> Response:
     return Response({"ans": "ok"})
 
 
+# тут админка post
+@need_admin
+@need_login(["GET", "POST"])
+def create_stuff_type(request: WSGIRequest) -> Response:
+    type_ = request.POST["type"]
+
+    nw = StuffType(type=type_)
+    nw.save()
+
+    return Response({"ans": "ok"})
+
+
 # тут админка get
 @need_admin
 @need_login(["GET"])
@@ -395,6 +407,18 @@ def change_product_type(request: WSGIRequest) -> Response:
     type.type = after
 
     type.save()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка post
+@need_admin
+@need_login(["GET", "POST"])
+def create_product_type(request: WSGIRequest) -> Response:
+    type_ = request.POST["type"]
+
+    nw = ProductType(type=type_)
+    nw.save()
 
     return Response({"ans": "ok"})
 
@@ -443,6 +467,18 @@ def change_time_type(request: WSGIRequest) -> Response:
     return Response({"ans": "ok"})
 
 
+# тут админка post
+@need_admin
+@need_login(["GET", "POST"])
+def create_time_type(request: WSGIRequest) -> Response:
+    type_ = request.POST["type"]
+
+    nw = TimeType(type=type_)
+    nw.save()
+
+    return Response({"ans": "ok"})
+
+
 # тут админка get
 @need_admin
 @need_login(["GET"])
@@ -483,6 +519,18 @@ def change_dirt_type(request: WSGIRequest) -> Response:
     type_.type = after
 
     type_.save()
+
+    return Response({"ans": "ok"})
+
+
+# тут админка post
+@need_admin
+@need_login(["GET", "POST"])
+def create_dirt_type(request: WSGIRequest) -> Response:
+    type_ = request.POST["type"]
+
+    nw = DirtType(type=type_)
+    nw.save()
 
     return Response({"ans": "ok"})
 

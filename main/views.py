@@ -507,7 +507,7 @@ def make_comment_for_article(request: WSGIRequest) -> Response:
     text = request.POST["text"]
     article_id = request.POST["id"]
 
-    new_com = CommentForArticle(user=user, text=text, article=Article.objects.filter(id=article_id))
+    new_com = CommentForArticle(user=user, text=text, article=Article.objects.get(id=article_id))
     new_com.save()
 
     return Response({"ans": "ok"})

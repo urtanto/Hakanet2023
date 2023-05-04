@@ -13,12 +13,17 @@ from main.models import User, Photo, Article
 
 
 def get_token(request: WSGIRequest) -> str:
+    """
+    Getting authorization token from request
+    :param request: request with token
+    :return: only token
+    """
     return request.headers.get("Authorization").split()[1]
 
 
 def need_login(method: list):
     """
-    simple decorator
+    simple decorator collected 3 other decorators
     :param method: GET/POST
     :return: func
     """

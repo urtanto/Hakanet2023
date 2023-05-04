@@ -26,28 +26,28 @@ class DirtType(models.Model):
     """
     Dirt levels
     """
-    type = models.TextField()
+    type = models.CharField(max_length=255)
 
 
 class ProductType(models.Model):
     """
     type of product
     """
-    type = models.TextField()
+    type = models.CharField(max_length=255)
 
 
 class StuffType(models.Model):
     """
     type of material
     """
-    type = models.TextField()
+    type = models.CharField(max_length=255)
 
 
 class TimeType(models.Model):
     """
     Type how fast we have to do it
     """
-    type = models.TextField()
+    type = models.CharField(max_length=255)
 
 
 class Service(models.Model):
@@ -67,7 +67,6 @@ class Photo(models.Model):
     photo_after = models.TextField()
     type_of_product = models.ForeignKey(ProductType, models.CASCADE)
     type_of_stuff = models.ForeignKey(StuffType, models.CASCADE)
-    type_of_time = models.ForeignKey(TimeType, models.CASCADE)
     type_of_dirt = models.ForeignKey(DirtType, models.CASCADE)
 
 

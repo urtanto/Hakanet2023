@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = env("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = ["hackaton2023.stylelifeweb.su",
                  "api.stylelifeweb.su",
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'bootstrap5',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -68,8 +69,8 @@ ROOT_URLCONF = 'Hakanet2023.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        # 'DIRS': [BASE_DIR / 'main/templates'],
+        # 'DIRS': [],
+        'DIRS': [BASE_DIR / 'main/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

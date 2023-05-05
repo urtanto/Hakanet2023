@@ -8,11 +8,12 @@
         <p class="text-default text-lg mb-16">Мы будем рады ответить на всё, что осталось под вопросом!</p>
       </div>
     </div>
-    <div class="py-6 pb-24 mt-[-24rem] my-auto">
+    <div class="py-6 pb-24 mt-[-15rem] my-auto">
       <form
         action="#"
         method="GET"
-        class="bg-accent-800 max-w-3xl mx-auto mb-28 gap-8 grid grid-cols-2 shadow-sm p-6 rounded-lg"
+        @submit="sendEmail"
+        class="bg-accent-800 max-w-3xl mx-auto mb-28 gap-8 shadow-[5px_1px_31px_9px_rgba(0,0,0,0.25)] grid grid-cols-2 p-6 rounded-lg"
       >
         <hack-input
           idInput="firstNameContact"
@@ -219,5 +220,10 @@ const formData = {
   email: ref(""),
   phone: ref(""),
   mesage: ref(""),
+}
+
+function sendEmail(e) {
+e.preventDefault();
+alert("Скоро будет!")
 }
 </script>

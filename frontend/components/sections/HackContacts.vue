@@ -1,9 +1,9 @@
 <template>
   <section>
     <div
-      class="h-[40rem] bg-blend-multiply bg-no-repeat bg-center bg-cover bg-fixed bg-accent/[.75] bg-[url(~/assets/images/banners/contact.jpg)]"
+      class="h-[30rem] bg-blend-multiply bg-no-repeat bg-center bg-cover bg-fixed bg-accent/[.75] bg-[url(~/assets/images/banners/contact.jpg)]"
     >
-      <div class="px-6 pt-28 pb-5 mx-auto flex flex-col items-center gap-4">
+      <div class="px-6 pt-24 pb-5 mx-auto flex flex-col items-center gap-4">
         <h2 class="text-default tracking-tight font-bold text-4xl m-0">Остались вопросы?</h2>
         <p class="text-default text-lg mb-16">Мы будем рады ответить на всё, что осталось под вопросом!</p>
       </div>

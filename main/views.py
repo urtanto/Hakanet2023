@@ -195,21 +195,11 @@ def get_main_page(request: WSGIRequest) -> Response:
 
 @api_view(["GET"])
 def get_services(request: WSGIRequest) -> Response:
-    context = {"services": [
-        {
-            "name": "first",
-            "cost": 2050.20,
-            "description": "da "
-        },
-        {
-            "name": "second",
-            "cost": 4450.55,
-            "description": "net "
-        },
-    ]
+    context = {"services": []
     }
     for service in Service.objects.all():
         service: Service
+        print(service.name)
         context["services"].append({
             "name": service.name,
             "cost": service.cost,

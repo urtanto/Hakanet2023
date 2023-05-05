@@ -8,5 +8,5 @@
 @tailwind utilities;
 
 html {
-  @apply font-base break-all;
+  @apply font-base;
 }

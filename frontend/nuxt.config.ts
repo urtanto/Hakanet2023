@@ -1,3 +1,5 @@
+import path from "path";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: ["nuxt-seo-kit"],
@@ -8,14 +10,14 @@ export default defineNuxtConfig({
         host: "0.0.0.0",
       },
     },
-  }, 
+  },
   components: [
     {
-      path: '~/components', // will get any components nested in let's say /components/test too
+      path: "~/components", // will get any components nested in let's say /components/test too
       pathPrefix: false,
     },
   ],
-  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge", "@pinia/nuxt"],
   runtimeConfig: {
     trailingSlash: true,
     indexable: false,
@@ -28,12 +30,16 @@ export default defineNuxtConfig({
       trailingSlash: false,
     },
   },
+  imports: {
+    dirs: ["./store"],
+  },
   postcss: {
     preset: {
       autoprefixer: {
         grid: true,
         flexbox: true,
       },
+      tailwindcss: path.resolve(__dirname, './tailwind.config.ts')
     },
   },
 })

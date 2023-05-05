@@ -3,57 +3,19 @@
     <div class="flex gap-2 justify-between align-center">
       <h2 class="text-3xl">Услуги</h2>
       <hack-link
-        class="text-xl"
-        to="/"
+        class="text-xl !text-accent-600 underline hover:no-underline"
+        to="/services"
         >Посмотреть все</hack-link
       >
     </div>
-    <div class="flex justify-between flex-wrap items-stretch gap-8">
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-    </div>
+    <ul class="grid grid-cols-3 auto-rows-fr gap-5">
+      <li  v-for="service in services" :key="service.id">
+        <hack-commerce-card :name="service.name" :description="service.description" :price="service.cost" class="h-full"/>
+          </li>
+    </ul>
   </section>
 </template>
+
+<script setup lang="ts">
+  const {services} = await $fetch('http://127.0.0.1:8000/get/services/')
+</script>

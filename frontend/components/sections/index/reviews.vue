@@ -70,8 +70,8 @@ interface Review extends Object {
   author_img: string
 }
 const reviews: Review[] = [
-  { id: 0, author: "Какой-то нн", msg: "Зажопили норм сайт, засранцы", author_img: "https://i.pravatar.cc/1000" },
-  { id: 1, author: "Какой-то нн", msg: "Зажопили норм сайт, засранцы", author_img: "https://i.pravatar.cc/1000" },
-  { id: 1, author: "Какой-то нн", msg: "Зажопили норм сайт, засранцы", author_img: "https://i.pravatar.cc/1000" },
+  { id: 0, author: "Пользователь123", msg: "Сделали крутой сайт", author_img: "https://i.pravatar.cc/1001" },
+  { id: 1, author: "Хакер", msg: "Я не смог взломать API и admin панель", author_img: "https://i.pravatar.cc/1002" },
+  { id: 2, author: "Красавчик", msg: "Меня заставили писать отзыв", author_img: "https://i.pravatar.cc/1003" },
 ]
 </script>

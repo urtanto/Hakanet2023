@@ -678,6 +678,12 @@ def get_menu_context():
             {'url_name': 'article_view_edit', 'name': 'Удалить', "action_type": "delete"},
         ],
         [
+            "Сервисы",
+            {'url_name': 'service_create', 'name': 'Создавать'},
+            {'url_name': 'service_view_edit', 'name': 'Редактировать', "action_type": "edit"},
+            {'url_name': 'service_view_edit', 'name': 'Удалить', "action_type": "delete"},
+        ],
+        [
             "Фото до/после",
             {'url_name': 'photo_upload', 'name': 'Загрузить фото'},
             {'url_name': 'photo_view', 'name': 'Удалить фото'},
@@ -1239,7 +1245,7 @@ def admin_service_create(request: WSGIRequest):
             return redirect(f"/admin?u={context['username']}&p={context['password']}")
         context['errors'] = form.errors
     else:
-        form = ArticleCreateForm()
+        form = ServiceCreateForm()
         context['form'] = form
     return render(request, "pages/create_smt.html", context)
 
@@ -1251,7 +1257,7 @@ def admin_service_view_all(request: WSGIRequest, action_type: str):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "data": list(Article.objects.all()),
+        "data": list(Service.objects.all()),
         "action_type": action_type,
         "expected_type": "сервиса",
         "url_edit": "service_edit",
@@ -1261,7 +1267,7 @@ def admin_service_view_all(request: WSGIRequest, action_type: str):
 
 
 @front
-def admin_article_edit(request: WSGIRequest, type_id: int):
+def admin_service_edit(request: WSGIRequest, type_id: int):
     context = {
         'pagename': "Admin Panel",
         'menu': get_menu_context(),
@@ -1283,19 +1289,16 @@ def admin_article_edit(request: WSGIRequest, type_id: int):
 
 
 @front
-def admin_article_delete(request: WSGIRequest, type_id: int):
+def admin_service_delete(request: WSGIRequest, type_id: int):
     context = {
         'pagename': "Admin Panel",
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
     }
-    article: Article = Article.objects.get(id=type_id)
-    for comment in article.commentforarticle_set.all():
-        comment: CommentForArticle
-        comment.delete()
-    article.delete()
-    return redirect(f"/admin/article/view/delete/?u={context['username']}&p={context['password']}")
+    service: Service = Service.objects.get(id=type_id)
+    service.delete()
+    return redirect(f"/admin/service/view/delete/?u={context['username']}&p={context['password']}")
 
 
 # ends services

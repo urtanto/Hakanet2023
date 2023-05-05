@@ -56,7 +56,7 @@ class Service(models.Model):
     """
     description = models.TextField()
     cost = models.FloatField()
-    name = models.TextField(default="")
+    name = models.CharField(max_length=255)
 
 
 class Photo(models.Model):

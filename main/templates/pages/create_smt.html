@@ -13,8 +13,10 @@
     <div class="d-flex justify-content-center align-items-center">
         <form method="post" enctype="multipart/form-data">
             {% bootstrap_form form %}
-            {% if expected_type != "Создание статьи" %}
+            {% if expected_type != "Создание статьи" and expected_type != "Создание сервиса" %}
                 <input class="btn btn-primary w-100" type="submit" value="Добавить тип {{ expected_type }}">
+            {% elif expected_type == "Создание сервиса" %}
+                <input class="btn btn-primary w-100" type="submit" value="Добавить сервис">
             {% else %}
                 <input class="btn btn-primary w-100" type="submit" value="Добавить статью">
             {% endif %}

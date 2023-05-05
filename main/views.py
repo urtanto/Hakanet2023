@@ -653,6 +653,15 @@ def make_review(request: WSGIRequest) -> Response:
     return Response({"ans": "ok"})
 
 
+@need_login(["POST"])
+def get_reviews(request: WSGIRequest) -> Response:
+    data = []
+    for review in ReviewForCompany.objects.all():
+        review: ReviewForCompany
+        data.append({"id": review.id, "avatar": review.user.avatar, "text": review.comment})
+    return Response({"data": data})
+
+
 @register.filter
 def is_drop(n):
     return isinstance(n, list)

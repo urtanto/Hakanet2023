@@ -12,6 +12,7 @@ class User(AbstractUser):
     :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
     """
     super_user = models.BooleanField(default=False)
+    avatar = models.CharField(max_length=255, default="default.png")
 
 
 class ReviewForCompany(models.Model):

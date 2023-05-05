@@ -42,6 +42,7 @@ urlpatterns = [
     re_path("^comment/delete", views.delete_comment_for_article),
     re_path("^comment/create", views.make_comment_for_article),
     re_path("^review/create", views.make_review),
+    re_path("^review/get", views.get_reviews),
     re_path("^admin/article/create", views.admin_article_create, name="article_create"),
     re_path("^admin/service/create", views.admin_service_create, name="service_create"),
     path("admin/product/view/<str:action_type>/", views.admin_product_view_all, name="product_view_edit"),

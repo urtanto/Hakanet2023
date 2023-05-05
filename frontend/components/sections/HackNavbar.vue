@@ -7,8 +7,14 @@
         </nuxt-link>
       <div class="flex justify-end md:order-2 w-full md:w-auto">
         <div class="flex gap-1">
-          <hack-button typeBtn="solid" data-modal-toggle="registerModal">Регистрация</hack-button>
-          <hack-button typeBtn="outline" data-modal-toggle="loginModal">Вход</hack-button>
+          <div class="flex gap-3" v-if="!authStore.auth.user">
+          <hack-button typeBtn="solid" data-modal-target="registerModal" data-modal-toggle="registerModal">Регистрация</hack-button>
+          <hack-button typeBtn="outline" data-modal-target="loginModal" data-modal-toggle="loginModal">Вход</hack-button>
+          </div>
+          <div v-else class="flex items-center justify-between gap-3">
+            <p class="text-default text-2xl capitalize">{{useAuthStore().auth.user?.username}}</p>
+            <hack-button type-btn="outline" @click="logout()">Выход</hack-button>
+          </div>
         <button data-collapse-toggle="navbar-sticky" type="button"
           class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           aria-controls="navbar-sticky" aria-expanded="false">
@@ -33,6 +39,7 @@
   </nav>
 </template>
 <script lang="ts" setup>
+import { initModals } from "flowbite";
 import logo from "~/assets/images/smallLogo.svg"
 const pages = [
   {
@@ -48,5 +55,10 @@ const pages = [
     slug: ref("/gallery"),
   }
 ]
+const authStore = useAuthStore()
+const logout = async () => {
+  await authStore.deleteAuthData();
+  initModals()
+}
 </script>
 <style scoped></style>

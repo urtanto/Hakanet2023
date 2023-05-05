@@ -80,6 +80,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^0.7.1",
+    "@pinia/nuxt": "^0.4.9",
     "axios": "^1.4.0",
     "flowbite": "^1.6.5",
     "node": "^19.0.0",

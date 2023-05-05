@@ -12,7 +12,7 @@
       <form
         action="#"
         method="GET"
-        class="bg-accent-700 max-w-3xl mx-auto mb-28 gap-8 grid grid-cols-2 shadow-sm p-6 rounded-lg"
+        class="bg-accent-800 max-w-3xl mx-auto mb-28 gap-8 grid grid-cols-2 shadow-sm p-6 rounded-lg"
       >
         <hack-input
           idInput="firstNameContact"
@@ -107,7 +107,7 @@
         <div class="col-span-2">
           <label
             for="message"
-            class="block mb-2 text-sm font-medium text-default"
+            class="hidden mb-2 text-sm font-medium text-default"
             >Собщение</label
           >
           <textarea
@@ -126,9 +126,7 @@
       <ul class="grid grid-cols-3 gap-3">
         <li class="px-5">
           <div>
-            <div
-              class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto"
-            >
+            <div class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto">
               <svg
                 class="w-8 h-8"
                 fill="currentColor"
@@ -141,61 +139,67 @@
             </div>
             <h3 class="font-bold text-black text-lg mb-2 m-0 text-center">Наша почта</h3>
             <p class="text-center text-gray-700 mb-2">
-            Пишите нам по электронной почте для общих вопросов, включая&nbsp;маркетинговые и партнерские возможности.
+              Пишите нам по электронной почте для общих вопросов, включая&nbsp;маркетинговые и партнерские возможности.
             </p>
             <a
-               href="mailto:shoeway@stylelifeweb.su"
+              href="mailto:shoeway@stylelifeweb.su"
               class="text-center inline-block w-full text-accent-600 font-bold underline hover:no-underline"
               aria-current="location"
-              >
+            >
               shoeway@stylelifeweb.su
             </a>
           </div>
         </li>
         <li class="px-5">
           <div>
-            <div
-              class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto"
-            >
+            <div class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto">
               <svg
                 class="w-8 h-8"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                <path
+                  d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
               </svg>
             </div>
             <h3 class="font-bold text-black text-lg mb-2 m-0 text-center">Поситите нас</h3>
             <p class="text-center text-gray-700 mb-2">
-            Мы работаем с <span class="text-accent-800 text-bold">Понедльника по Пятницу</span> с <span class="text-accent-800 text-bold">08:00 до 18:00</span></p>
-<a href="https://yandex.ru/maps/-/CCUgVStisD" class="text-center inline-block w-full text-accent-600 font-bold underline hover:no-underline">г. Тюмень, улица 25 Октября, 23Ас1</a>
-
+              Мы работаем с <span class="text-accent-800 text-bold">Понедльника по Пятницу</span> с
+              <span class="text-accent-800 text-bold">08:00 до 18:00</span>
+            </p>
+            <a
+              href="https://yandex.ru/maps/-/CCUgVStisD"
+              class="text-center inline-block w-full text-accent-600 font-bold underline hover:no-underline"
+              >г. Тюмень, улица 25 Октября, 23Ас1</a
+            >
           </div>
         </li>
         <li class="px-5">
           <div>
-            <div
-              class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto"
-            >
+            <div class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto">
               <svg
                 class="w-8 h-8"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
               >
-<path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                <path
+                  d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+                ></path>
               </svg>
             </div>
             <h3 class="font-bold text-black text-lg mb-2 m-0 text-center">Позвоните нам</h3>
             <p class="text-center text-gray-700 mb-2">
-            Позвоните нам, чтобы поговорить с одним из членов нашей команды. Мы всегда рады помочь.
+              Позвоните нам, чтобы поговорить с одним из членов нашей команды. Мы всегда рады помочь.
             </p>
             <a
-               href="tel:88005553535"
+              href="tel:88005553535"
               class="text-center inline-block w-full text-accent-600 font-bold underline hover:no-underline"
-              >
+            >
               +7 (800) 555-35-35
             </a>
           </div>
@@ -209,8 +213,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import HackLink from "~/components/UI/HackLink"
-
 const formData = {
   firstName: ref(""),
   lastName: ref(""),

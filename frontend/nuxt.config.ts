@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge", "@pinia/nuxt"],
   runtimeConfig: {
     trailingSlash: true,
     indexable: false,
@@ -27,6 +27,9 @@ export default defineNuxtConfig({
       titleSeparator: "|",
       trailingSlash: false,
     },
+  },
+  imports: {
+    dirs: ['./store']
   },
   postcss: {
     preset: {

@@ -653,6 +653,7 @@ def make_review(request: WSGIRequest) -> Response:
     return Response({"ans": "ok"})
 
 
+@api_view(["GET"])
 def get_reviews(request: WSGIRequest) -> Response:
     data = []
     for review in ReviewForCompany.objects.all():

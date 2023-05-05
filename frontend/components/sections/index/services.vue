@@ -1,59 +1,14 @@
 <template>
-    <section class="flex flex-col gap-10 justify-center flex-wrap mb-10">
-    <div class="flex gap-2 justify-between align-center">
-      <h2 class="text-3xl">Услуги</h2>
-      <hack-link
-        class="text-xl"
-        to="/"
-        >Посмотреть все</hack-link
-      >
-    </div>
-    <div class="flex justify-between flex-wrap items-stretch gap-8">
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-      <hack-commerce-card
-        name="Читска коженной обуви"
-        description="Чистим вашу обувь быстро и на месте"
-        price="1202"
-      ></hack-commerce-card>
-    </div>
+    <section v-if="services.length" class="flex flex-col gap-10 justify-center flex-wrap mb-10">
+      <h2 class="text-3xl text-center">Услуги</h2>
+    <ul class="grid grid-cols-3 auto-rows-fr gap-5">
+      <li  v-for="service in services" :key="service.id">
+        <hack-commerce-card :name="service.name" :description="service.description" :price="service.cost" class="h-full"/>
+          </li>
+    </ul>
   </section>
 </template>
+
+<script setup lang="ts">
+  const {services} = await $fetch('http://127.0.0.1:8000/get/services/')
+</script>

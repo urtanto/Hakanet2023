@@ -16,13 +16,13 @@
 
 
 <body class="gradient-background">
-<header class="header container" style="padding: 10px;">
+<header class="container header">
     {% include 'base/menu.html' %}
     {% block header %}{% endblock %}
 </header>
 
-<div class="container borders">
-    <main role="main" class="container-fluid np" style="overflow: auto">
+<div class="container-fluid borders">
+    <main role="main" class="container-fluid np">
         {% bootstrap_messages %}
         {% block content %}{% endblock %}
     </main>
@@ -32,16 +32,19 @@
 
 {% block extracontent %} {% endblock %}
 
-<footer class="footer container">
-    {% block footer %}
-    <div class="container text-right" style="margin: 0; padding: 0 0 0 3vh;">
-        <span class="text-muted">&copy; ШП, {% now "Y" %}</span>
-    </div>
-    {% endblock %}
-</footer>
+{#<footer class="container-fluid footer">#}
+{#    {% block footer %}#}
+{#        <div class="container text-right" style="margin: 0; padding: 0 0 0 3vh; display: table;">#}
+{#            <span class="text-muted" style="height: 100%;">&copy; Хакатон, {% now "Y" %}</span>#}
+{#            <p style="display: table-cell; vertical-align: middle; margin: 0;">fffff</p>#}
+{#        </div>#}
+{#    {% endblock %}#}
+{#</footer>#}
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 
 {% block extra_js %}

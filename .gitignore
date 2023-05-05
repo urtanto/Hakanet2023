@@ -9,7 +9,6 @@ node_modules
 .env
 dist
 mydb.sqlite3
-test.py
 main/static/images
 
 __pycache__

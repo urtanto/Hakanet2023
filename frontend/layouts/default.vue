@@ -9,7 +9,7 @@
       <slot />
     </main>
     <footer>
-      <hack-contacts />>
+      <hack-contacts />
     </footer>
   </div>
 </template>

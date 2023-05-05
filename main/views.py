@@ -853,7 +853,7 @@ def admin_image_view_all(request: WSGIRequest):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "data": list(Photo.objects.all()),
+        "data": list(Photo.objects.all()) * 100,
     }
     return render(request, "pages/view_photo.html", context)
 

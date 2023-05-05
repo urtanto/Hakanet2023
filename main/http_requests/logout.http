@@ -1,5 +1,0 @@
-POST http://localhost:8000/logout
-Content-Type: application/json
-Authorization: Token 960b06e3a2fe6b1af9c6778d149adf1d5cf679a9
-
-{}

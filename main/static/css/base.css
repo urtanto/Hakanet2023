@@ -31,7 +31,7 @@ body {
     position: absolute;
     left: 2vh;
     top: 2vh;
-    width: 25vh;
+    width: 15vw;
 }
 
 .borders {
@@ -39,12 +39,12 @@ body {
     padding: 3vh;
     background: #fff;
     position: absolute;
-    left: 29vh;
+    left: calc(15vw + 4vh);
     top: 2vh;
     border-radius: 0.5rem;
     min-height: 96vh;
     max-height: 96vh;
-    width: calc(100vw - 31vh * 2);
+    width: calc(100vw - calc(15vw + 4vh) * 2);
     overflow: auto;
 
 }

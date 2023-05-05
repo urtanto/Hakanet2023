@@ -74,6 +74,21 @@ class TimeEditForm(forms.ModelForm):
         fields = ['type']
 
 
+class ServiceCreateForm(forms.Form):
+    name = forms.CharField(label="Название сервиса",
+                           max_length=255,
+                           widget=TextInput(attrs={"class": "form-control"}))
+    cost = forms.IntegerField(label="Цена")
+    description = forms.CharField(label="Описание",
+                           widget=forms.Textarea())
+
+
+class ServiceEditForm(forms.ModelForm):
+    class Meta:
+        model = TimeType
+        fields = ['name', 'cost', 'description']
+
+
 class ArticleCreateForm(forms.Form):
     name = forms.CharField(label="Название статьи",
                            max_length=255,

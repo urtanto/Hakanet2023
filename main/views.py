@@ -17,9 +17,10 @@ from Hakanet2023.serializers import UserSerializer
 
 from Hakanet2023.settings import BASE_DIR
 from main.forms import PhotoUploadForm, ProductCreateForm, ProductEditForm, StuffCreateForm, StuffEditForm, \
-    DirtCreateForm, DirtEditForm, TimeCreateForm, TimeEditForm, ArticleCreateForm, ArticleEditForm
+    DirtCreateForm, DirtEditForm, TimeCreateForm, TimeEditForm, ArticleCreateForm, ArticleEditForm, ServiceCreateForm, \
+    ServiceEditForm
 from main.models import User, Photo, Article, StuffType, TimeType, DirtType, CommentForArticle, Order, ReviewForCompany, \
-    ProductType
+    ProductType, Service
 
 
 def get_product_type_choices():
@@ -1217,6 +1218,87 @@ def admin_article_delete(request: WSGIRequest, type_id: int):
 
 
 # ends article
+# starts article
+@front
+def admin_service_create(request: WSGIRequest):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "Создание сервиса",
+    }
+    if request.method == "POST":
+        form = ServiceCreateForm(request.POST)
+        if form.is_valid():
+            product = Service(name=form.cleaned_data['name'],
+                              cost=form.cleaned_data['cost'],
+                              description=form.cleaned_data['description'],
+                              )
+            product.save()
+            return redirect(f"/admin?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = ArticleCreateForm()
+        context['form'] = form
+    return render(request, "pages/create_smt.html", context)
+
+
+@front
+def admin_service_view_all(request: WSGIRequest, action_type: str):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "data": list(Article.objects.all()),
+        "action_type": action_type,
+        "expected_type": "сервиса",
+        "url_edit": "service_edit",
+        "url_delete": "service_delete",
+    }
+    return render(request, "pages/view_article.html", context)
+
+
+@front
+def admin_article_edit(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+        "expected_type": "Изменение сервиса",
+    }
+    cur_product = Service.objects.get(id=type_id)
+    if request.method == "POST":
+        form = ServiceEditForm(request.POST, instance=cur_product)
+        if form.is_valid():
+            form.save()
+            return redirect(f"/admin/service/view/edit/?u={context['username']}&p={context['password']}")
+        context['errors'] = form.errors
+    else:
+        form = ServiceEditForm(instance=cur_product)
+        context['form'] = form
+    return render(request, "pages/edit_smt.html", context)
+
+
+@front
+def admin_article_delete(request: WSGIRequest, type_id: int):
+    context = {
+        'pagename': "Admin Panel",
+        'menu': get_menu_context(),
+        'username': request.GET.get("u"),
+        'password': request.GET.get("p"),
+    }
+    article: Article = Article.objects.get(id=type_id)
+    for comment in article.commentforarticle_set.all():
+        comment: CommentForArticle
+        comment.delete()
+    article.delete()
+    return redirect(f"/admin/article/view/delete/?u={context['username']}&p={context['password']}")
+
+
+# ends services
 
 def admin_error(request: WSGIRequest, exception=None):
     context = {'menu': get_menu_context()}

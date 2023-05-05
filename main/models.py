@@ -12,6 +12,7 @@ class User(AbstractUser):
     :param status: если честно хз :class:`django.contrib.auth.models.AbstractUser`
     """
     super_user = models.BooleanField(default=False)
+    avatar = models.CharField(max_length=255, default="default.png")
 
 
 class ReviewForCompany(models.Model):
@@ -56,7 +57,7 @@ class Service(models.Model):
     """
     description = models.TextField()
     cost = models.FloatField()
-    name = models.TextField(default="")
+    name = models.CharField(max_length=255)
 
 
 class Photo(models.Model):
@@ -75,7 +76,7 @@ class Article(models.Model):
     Article in the blog
     """
     user = models.ForeignKey(get_user_model(), models.CASCADE)
-    name = models.TextField(default="")
+    name = models.CharField(max_length=255)
     text = models.TextField()
 
 

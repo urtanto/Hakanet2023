@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/my.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3>Удаление отзывов о сайте</h3>
+    <div style="width: 100%; height: 2%;"></div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: left; width: 100%; gap: 2vh;">
+        {% for item in data %}
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">
+                    <div style="display: block;">
+                        <p>user: {{ item.user.username }}</p>
+                        <p>{{ item.comment }}</p>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <a class="btn btn-danger"
+                       href="{% url 'comment_delete' type_id=item.id %}?u={{ username }}&p={{ password }}">Delete</a>
+                </li>
+            </ul>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/button_name_change.js' %}"></script>
+{% endblock %}

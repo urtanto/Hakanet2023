@@ -86,6 +86,10 @@
    ```bash
    psql
    ```
+   or
+   ```bash
+   psql -U <dataBaseUserName> <dataBaseName>
+   ```
 * Create db:
    ```bash
    createdb mydb

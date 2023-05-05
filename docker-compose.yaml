@@ -38,3 +38,4 @@ services:
 
 volumes:
   postgresql_master_data:
+  postgresql_master_data:

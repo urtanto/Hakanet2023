@@ -48,5 +48,5 @@ interface Review extends Object {
   msg: string
   author_img: string
 }
-const { data } = await $fetch("http://api.stylelifeweb.su/review/get/")
+const { data } = await $fetch("https://api.stylelifeweb.su/review/get/")
 </script>

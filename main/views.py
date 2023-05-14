@@ -169,13 +169,13 @@ def get_main_page(request: WSGIRequest) -> Response:
             "service_id": 1,
             "name": "first",
             "cost": 2050.20,
-            "description": "da " * 100
+            "description": "da "
         },
         {
             "service_id": 2,
             "name": "second",
             "cost": 4450.55,
-            "description": "net " * 100
+            "description": "net "
         },
     ],
         "comments": [
@@ -195,19 +195,16 @@ def get_main_page(request: WSGIRequest) -> Response:
 
 @api_view(["GET"])
 def get_services(request: WSGIRequest) -> Response:
-    context = {"services": [
-        {
-            "name": "first",
-            "cost": 2050.20,
-            "description": "da " * 100
-        },
-        {
-            "name": "second",
-            "cost": 4450.55,
-            "description": "net " * 100
-        },
-    ]
+    context = {"services": []
     }
+    for service in Service.objects.all():
+        service: Service
+        print(service.name)
+        context["services"].append({
+            "name": service.name,
+            "cost": service.cost,
+            "description": service.description
+        })
     return Response(context)
 
 
@@ -217,7 +214,7 @@ def get_service(request: WSGIRequest, service_id: int) -> Response:
         "service_id": service_id,
         "name": "first",
         "cost": 2050.20,
-        "description": "da " * 100
+        "description": "da "
     }
     }
     return Response(context)
@@ -869,7 +866,7 @@ def admin_image_view_all(request: WSGIRequest):
         'menu': get_menu_context(),
         'username': request.GET.get("u"),
         'password': request.GET.get("p"),
-        "data": list(Photo.objects.all()) * 100,
+        "data": list(Photo.objects.all()),
     }
     return render(request, "pages/view_photo.html", context)
 

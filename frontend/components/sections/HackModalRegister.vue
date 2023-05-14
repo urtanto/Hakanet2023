@@ -144,7 +144,7 @@ async function register(e: any) {
     addErrors(errors)
     return 0
   }
-  const authToken = await $fetch("http://localhost:8000/signup/", {
+  const authToken = await $fetch("https:/api.stylelifeweb.su/signup/", {
     method: "POST",
     mode: "cors",
     body: {

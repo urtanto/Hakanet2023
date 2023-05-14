@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-  const {services} = await $fetch('http://api.stylelifeweb.su/get/services/')
+  const {services} = await $fetch('https://api.stylelifeweb.su/get/services/')
 </script>

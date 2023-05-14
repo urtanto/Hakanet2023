@@ -34,7 +34,7 @@ export const useAuthStore = defineStore("authStore", {
   actions: {
     async saveAuthData(token: string) {
       this.auth = {token: token, user: {} as User} as Auth;
-      const data = await $fetch("http://localhost:8000/get/user/", {
+      const data = await $fetch("https:/api.stylelifeweb.su/get/user/", {
       method: "GET",
       mode: "cors",
       parseResponse: JSON.parse,
@@ -47,7 +47,7 @@ export const useAuthStore = defineStore("authStore", {
     this.auth["user"] = data.user
     },
     async deleteAuthData() {
-      await $fetch("http://localhost:8000/logout",  {
+      await $fetch("https://api.stylelifeweb.su/logout",  {
       method: "POST",
       mode: "cors",
       parseResponse: JSON.parse,

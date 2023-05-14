@@ -83,7 +83,7 @@ function addErrors(errors: ErrorField[]) {
 async function login(e: any) {
   e.preventDefault()
   removeErrors()
-  const authToken: Object = await $fetch("http://localhost:8000/login/", {
+  const authToken: Object = await $fetch("https://api.stylelifeweb.su/login/", {
     method: "POST",
     mode: "cors",
     body: {

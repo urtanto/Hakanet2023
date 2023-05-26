@@ -1,4 +1,4 @@
-import path from "path";
+import path from "path"
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -17,12 +17,13 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  modules: ["@nuxtjs/tailwindcss", "nuxt-purgecss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge", "@pinia/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-svgo", "@nuxt/image-edge", "@nuxt/image-edge", "@pinia/nuxt"],
   runtimeConfig: {
     trailingSlash: true,
     indexable: false,
     public: {
-      siteUrl: "http:/localhost:3000",
+      apiUrl: "http://127.0.0.1:8000",
+      siteUrl: "http:/127.0.0.1:3000",
       siteName: "Hackaton Site",
       siteDescription: "Site base on Nuxt.",
       language: "ru-RU",
@@ -39,7 +40,7 @@ export default defineNuxtConfig({
         grid: true,
         flexbox: true,
       },
-      tailwindcss: path.resolve(__dirname, './tailwind.config.ts')
+      tailwindcss: path.resolve(__dirname, "./tailwind.config.ts"),
     },
   },
 })

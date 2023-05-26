@@ -47,6 +47,7 @@
 import { ref, Ref } from 'vue'
 const authStore = useAuthStore()
 const errorElemText = '<p data-error class="mt-2 text-sm text-red-600 dark:text-red-500">{}</p>'
+const config = useRuntimeConfig()
 interface FormDataType extends Object {
   email: Ref<String>
   username: Ref<String>
@@ -144,7 +145,7 @@ async function register(e: any) {
     addErrors(errors)
     return 0
   }
-  const authToken = await $fetch("https:/api.stylelifeweb.su/signup/", {
+  const authToken = await $fetch(`${config.public.apiUrl}/signup/`, {
     method: "POST",
     mode: "cors",
     body: {

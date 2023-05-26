@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+import { useRuntimeConfig } from "nuxt/app"
 
 interface User extends Object {
   last_login: string | null
@@ -34,7 +35,8 @@ export const useAuthStore = defineStore("authStore", {
   actions: {
     async saveAuthData(token: string) {
       this.auth = {token: token, user: {} as User} as Auth;
-      const data = await $fetch("https:/api.stylelifeweb.su/get/user/", {
+      const config = useRuntimeConfig()
+      const data = await $fetch(`${config.public.apiUrl}/get/user/`, {
       method: "GET",
       mode: "cors",
       parseResponse: JSON.parse,
@@ -47,7 +49,8 @@ export const useAuthStore = defineStore("authStore", {
     this.auth["user"] = data.user
     },
     async deleteAuthData() {
-      await $fetch("https://api.stylelifeweb.su/logout",  {
+      const config = useRuntimeConfig()
+      await $fetch(`${config.public.apiUrl}/logout`,  {
       method: "POST",
       mode: "cors",
       parseResponse: JSON.parse,

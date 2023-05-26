@@ -1,10 +1,9 @@
-
 <template>
   <hack-modal idModal="loginModal" nameModal="Вход">
     <form v-if="!authStore.auth.user" action="#" @submit="login" class="flex flex-col gap-8">
       <hack-input idInput="loginLog" typeInput="login" nameInput="usernameLogin" v-model.trim.lazy="formData.login.value">
         <div class="flex items-center">
-      <svg fill="currentColor" class="w-5 h-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+          <svg fill="currentColor" class="w-5 h-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">
             <path clip-rule="evenodd" fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.536-4.464a.75.75 0 10-1.061-1.061 3.5 3.5 0 01-4.95 0 .75.75 0 00-1.06 1.06 5 5 0 007.07 0zM9 8.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S7.448 7 8 7s1 .672 1 1.5zm3 1.5c.552 0 1-.672 1-1.5S12.552 7 12 7s-1 .672-1 1.5.448 1.5 1 1.5z">
@@ -13,8 +12,8 @@
           <span class="ml-2">Логин</span>
         </div>
       </hack-input>
-      <hack-input idInput="passwordLog" typeInput="password" nameInput="passwordLogin" :visible="formData.visiblePass.value"
-        @changeMode="changeMode" v-model.trim.lazy="formData.password.value">
+      <hack-input idInput="passwordLog" typeInput="password" nameInput="passwordLogin"
+        :visible="formData.visiblePass.value" @changeMode="changeMode" v-model.trim.lazy="formData.password.value">
         <div class="flex items-center">
           <svg fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">
@@ -30,18 +29,21 @@
         Войти
       </hack-button>
     </form>
-    <p v-else class="text-default text-3xl text-center">Вы успешно авторизированы!</p>
+    <p v-else class="text-default text-3xl text-center">
+      Вы успешно авторизированы!
+    </p>
   </hack-modal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue"
 const formData = {
   login: ref(""),
   password: ref(""),
   visiblePass: ref(false),
 }
 
+const config = useRuntimeConfig()
 const errorElemText = '<p data-error class="mt-2 text-sm text-red-600 dark:text-red-500">{}</p>'
 const authStore = useAuthStore()
 interface ErrorField extends Object {
@@ -83,7 +85,7 @@ function addErrors(errors: ErrorField[]) {
 async function login(e: any) {
   e.preventDefault()
   removeErrors()
-  const authToken: Object = await $fetch("https://api.stylelifeweb.su/login/", {
+  const authToken: Object = await $fetch(`${config.public.apiUrl}/login/`, {
     method: "POST",
     mode: "cors",
     body: {
@@ -100,18 +102,18 @@ async function login(e: any) {
       const responseCode = response.status
       if (data) {
         if (responseCode != 200) {
-        console.log(data)
+          console.log(data)
           const respErrors: ErrorField[] = []
           const el = data.detail
           console.log(el)
-                let error: ErrorField = {
-                  msg: el,
-                  fieldName: /password/.test(el) ? 'passwordLogin' : 'usernameLogin',
-                }
-                console.log(error)
-                respErrors.push(error)
+          let error: ErrorField = {
+            msg: el,
+            fieldName: /password/.test(el) ? "passwordLogin" : "usernameLogin",
+          }
+          console.log(error)
+          respErrors.push(error)
           addErrors(respErrors)
-        } 
+        }
       }
     },
     async onRequestError({ request, error }) {
@@ -120,7 +122,7 @@ async function login(e: any) {
     },
   })
   if (authToken.hasOwnProperty("token")) {
-    await authStore.saveAuthData(authToken.token);
+    await authStore.saveAuthData(authToken.token)
   }
 }
 </script>

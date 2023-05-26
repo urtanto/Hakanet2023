@@ -8,5 +8,21 @@
 @tailwind utilities;
 
 html {
-  @apply font-base;
+  @apply font-base box-border;
+}
+
+
+a {
+  @apply no-underline;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*,
+*::after,
+*::before {
+  @apply box-border
+}
+
+body {
+  @apply overflow-x-hidden;
 }

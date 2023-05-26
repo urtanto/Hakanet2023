@@ -5,7 +5,7 @@
     <header class="">
       <hack-navbar />
     </header>
-    <main class="w-[1024px] mx-auto my-1">
+    <main class="">
       <slot />
     </main>
     <footer>

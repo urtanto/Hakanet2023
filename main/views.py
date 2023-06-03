@@ -642,7 +642,8 @@ def get_orders(request: WSGIRequest) -> Response:
 @need_login(["POST"])
 def make_review(request: WSGIRequest) -> Response:
     user = request.user
-    text = request.POST["text"]
+    print(request.POST)
+    text = request.data["text"]
 
     new_com = ReviewForCompany(user=user, comment=text)
     new_com.save()
@@ -655,7 +656,7 @@ def get_reviews(request: WSGIRequest) -> Response:
     data = []
     for review in ReviewForCompany.objects.all():
         review: ReviewForCompany
-        data.append({"id": review.id, "avatar": review.user.avatar, "text": review.comment})
+        data.append({"id": review.id, "author_img": review.user.avatar, "msg": review.comment, "author": review.user.username})
     return Response({"data": data})
 
 

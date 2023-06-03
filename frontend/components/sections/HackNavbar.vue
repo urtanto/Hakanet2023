@@ -1,7 +1,7 @@
 <template>
   <nav class="bg-accent fixed w-full z-50 top-0 left-0">
     <div
-      class="max-w-screen-xl relative flex ap-y-3 items-center justify-between mx-auto p-4">
+      class="max-w-screen-xl relative flex gap-y-3 items-center justify-between mx-auto p-4">
         <nuxt-link to="/" class="flex h-10 text-default">
           <logo class="h-full" />
         </nuxt-link>

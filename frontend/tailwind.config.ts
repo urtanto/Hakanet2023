@@ -1,7 +1,10 @@
 import type { Config } from "tailwindcss"
 
 export default <Partial<Config>>{
-  plugins: [require("flowbite")],
+  plugins: [
+    require("flowbite"),
+    require("@yet3/tailwindcss-fluid-text"),
+  ],
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",

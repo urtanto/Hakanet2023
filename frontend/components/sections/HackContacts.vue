@@ -124,7 +124,7 @@
           >Отправить</hack-button
         >
       </form>
-      <ul class="grid grid-cols-3 gap-3">
+      <ul class="grid md:grid-cols-3 gap-y-20 gap-x-5">
         <li class="px-5">
           <div>
             <div class="w-16 h-16 bg-accent-600 text-default rounded-lg flex items-center justify-center mb-4 mx-auto">
